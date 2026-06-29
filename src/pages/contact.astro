@@ -1,0 +1,142 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import ContactForm from '@/components/forms/ContactForm';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+const es = lang === 'es';
+
+const mapsUrl = 'https://maps.google.com/?q=3909+W+Broad+St+Tampa+FL+33614';
+const mapEmbed = 'https://www.google.com/maps?q=3909+W+Broad+St+Tampa+FL+33614&output=embed';
+
+const socials = [
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/pavlovalove.tampa/',
+    path: 'M3 3h18v18H3zM7.5 3v18M16.5 3v18M3 7.5h18M3 16.5h18',
+    icon: 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17.5 6.5h.01M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z',
+  },
+  {
+    label: 'Facebook',
+    href: '#',
+    icon: 'M14 8h2V5h-2a3 3 0 0 0-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V8.5a.5.5 0 0 1 .5-.5z',
+  },
+  {
+    label: 'TikTok',
+    href: '#',
+    icon: 'M15 4c.5 2 2 3.5 4 3.8V11c-1.6 0-3-.5-4-1.3V15a5 5 0 1 1-5-5c.3 0 .7 0 1 .1v3.1A2 2 0 1 0 12 15V4z',
+  },
+];
+---
+
+<MainLayout
+  title={t('contact.title')}
+  description={es
+    ? 'Contáctanos — Pavlova Love Tampa, 3909 W Broad St, Tampa FL. Tel: (813) 930-5229.'
+    : 'Contact us — Pavlova Love Tampa, 3909 W Broad St, Tampa FL. Phone: (813) 930-5229.'}
+>
+
+  <!-- ════════ HERO ════════ -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/cafe-interior.png" alt={es ? 'Interior de la cafetería' : 'Our café interior'} class="w-full h-full object-cover" loading="eager" />
+      <div class="absolute inset-0 bg-[#4d2236]/76"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#4d2236]/45 via-transparent to-[#4d2236]/55"></div>
+    </div>
+    <div class="reveal reveal-1 relative container-lux text-center min-h-[180px] lg:min-h-[220px] flex flex-col items-center justify-center py-8">
+      <p class="eyebrow text-[var(--blush)] mb-3">{es ? 'Contáctanos' : 'Reach Out'}</p>
+      <h1 class="font-serif text-white text-4xl lg:text-5xl leading-[1.02]">{es ? 'Hablemos' : 'Get in Touch'}</h1>
+      <span class="block w-16 h-px bg-white/40 mt-5"></span>
+    </div>
+  </section>
+
+  <!-- ════════ INFO + FORM ════════ -->
+  <section class="container-lux py-16 lg:py-24">
+    <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16">
+
+      <!-- Left — contact info -->
+      <div class="space-y-10 text-center lg:text-left" data-reveal>
+        <div>
+          <p class="eyebrow text-[var(--cta)] mb-2">{es ? 'Visítanos' : 'Visit Us'}</p>
+          <h3 class="font-serif text-2xl text-base-content mb-2">{es ? 'Nuestra Pastelería' : 'Our Patisserie'}</h3>
+          <p class="text-base-content/65 leading-relaxed">3909 W Broad St<br/>Tampa, FL 33614</p>
+          <a href={mapsUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-[0.7rem] font-bold tracking-[0.18em] uppercase text-[var(--cta)] mt-3 hover:gap-2.5 transition-all">
+            {es ? 'Cómo Llegar' : 'Get Directions'}
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div>
+          <p class="eyebrow text-[var(--cta)] mb-2">{es ? 'Háblanos' : 'Speak With Us'}</p>
+          <h3 class="font-serif text-2xl text-base-content mb-4">{es ? 'Pedidos y Consultas' : 'Orders & Inquiries'}</h3>
+          <div class="space-y-3 max-w-xs mx-auto lg:mx-0">
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-base-content/55">{es ? 'Teléfono' : 'Phone'}</span>
+              <span class="flex-1 border-b border-dotted border-base-content/25 translate-y-[-3px]"></span>
+              <a href="tel:+18139305229" class="text-sm font-semibold text-base-content hover:text-[var(--cta)] transition-colors whitespace-nowrap">(813) 930-5229</a>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-base-content/55">WhatsApp</span>
+              <span class="flex-1 border-b border-dotted border-base-content/25 translate-y-[-3px]"></span>
+              <a href="https://wa.me/18139305229" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-base-content hover:text-[var(--cta)] transition-colors whitespace-nowrap">(813) 930-5229</a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow text-[var(--cta)] mb-2">{es ? 'Síguenos' : 'Connect With Us'}</p>
+          <h3 class="font-serif text-2xl text-base-content mb-4">{es ? 'Redes Sociales' : 'Socials'}</h3>
+          <div class="flex gap-3 justify-center lg:justify-start">
+            {socials.map((s) => (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                class="inline-grid place-items-center w-11 h-11 rounded-full bg-[var(--blush-soft)] text-[var(--cta)] hover:bg-[var(--cta)] hover:text-white transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={s.icon}/></svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right — form card -->
+      <div class="reveal reveal-right bg-[var(--blush-soft)] rounded-[24px] p-7 lg:p-10">
+        <ContactForm lang={lang} client:load />
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ MAP ════════ -->
+  <section class="container-lux pb-20 lg:pb-28">
+    <div class="reveal relative rounded-[var(--radius-box)] overflow-hidden shadow-[var(--shadow-soft)] border border-[var(--hairline)]">
+      <iframe
+        src={mapEmbed}
+        title={es ? 'Mapa de Pavlova Love Tampa' : 'Pavlova Love Tampa map'}
+        class="w-full h-[420px] lg:h-[520px] block grayscale-[0.15]"
+        style="border:0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+
+      <!-- Overlaid location card -->
+      <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-8 lg:left-12 w-[min(20rem,calc(100%-2rem))] bg-base-100 rounded-[20px] shadow-[var(--shadow-lift)] p-7">
+        <p class="eyebrow text-[var(--cta)] mb-2">{es ? 'Aquí Estamos' : 'Find Us Here'}</p>
+        <h3 class="font-serif text-2xl text-base-content mb-2">{es ? 'Estudio Tampa' : 'Tampa Studio'}</h3>
+        <p class="text-sm text-base-content/60 leading-relaxed mb-6">
+          {es
+            ? 'Ubicados en el corazón de Tampa, nuestro estudio es donde sucede la magia. Visítanos para postres recién hechos y dulces a medida.'
+            : 'Located in the heart of Tampa, our studio is where the magic happens. Visit us for freshly made pastries and boutique sweets.'}
+        </p>
+        <a href={mapsUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full bg-[var(--cta)] text-white text-[0.66rem] font-bold tracking-[0.2em] uppercase h-11 px-7 hover:bg-[var(--cta-hover)] transition-colors">
+          {es ? 'Abrir en Maps' : 'Open in Maps'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

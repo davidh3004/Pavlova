@@ -1,0 +1,43 @@
+{
+  "name": "pavlova-love-tampa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "typecheck": "astro check",
+    "seed": "node scripts/seed-firestore.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.0",
+    "@astrojs/react": "^5.0.0",
+    "@astrojs/vercel": "^10.0.0",
+    "@hookform/resolvers": "^3.10.0",
+    "@nanostores/react": "^0.8.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "astro": "^6.4.0",
+    "clsx": "^2.1.1",
+    "daisyui": "^5.0.0",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^13.10.0",
+    "lucide-react": "^0.545.0",
+    "nanostores": "^0.11.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hook-form": "^7.55.0",
+    "square": "^44.1.0",
+    "tailwindcss": "^4.1.14",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "vite": "^7"
+  }
+}

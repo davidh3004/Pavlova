@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+*.tsbuildinfo
+.DS_Store
+
+# Local development data store (file-based fallback when Firebase is not configured)
+/data/

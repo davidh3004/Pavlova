@@ -1,0 +1,10 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminCustomOrders from '@/components/admin/AdminCustomOrders';
+
+import { getAdminId } from '@/server/auth';
+if (!getAdminId(Astro.cookies)) return Astro.redirect('/admin');
+---
+<AdminLayout title="Custom Orders" currentPath="/admin/custom-orders">
+  <AdminCustomOrders client:load />
+</AdminLayout>

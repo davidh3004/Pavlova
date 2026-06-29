@@ -1,0 +1,40 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import CheckoutForm from '@/components/checkout/CheckoutForm';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+
+// Square config — public identifiers only; secrets never leave the server
+import { SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID, SQUARE_ENVIRONMENT } from '@/server/square';
+const squareConfig = {
+  applicationId: SQUARE_APPLICATION_ID,
+  locationId: SQUARE_LOCATION_ID,
+  environment: SQUARE_ENVIRONMENT,
+  configured: Boolean(SQUARE_APPLICATION_ID && SQUARE_LOCATION_ID),
+};
+
+// Square Web Payments SDK CDN differs by environment
+const squareSdkUrl = squareConfig.environment === 'production'
+  ? 'https://web.squarecdn.com/v1/square.js'
+  : 'https://sandbox.web.squarecdn.com/v1/square.js';
+---
+
+<MainLayout
+  title={t('checkout.title')}
+  description="Checkout | Pavlova Love Tampa"
+  noindex={true}
+>
+  <!-- Square Web Payments SDK — URL depends on sandbox vs production -->
+  {squareConfig.configured && (
+    <script src={squareSdkUrl} is:inline></script>
+  )}
+
+  <CheckoutForm
+    lang={lang}
+    squareAppId={squareConfig.applicationId}
+    squareLocationId={squareConfig.locationId}
+    client:load
+  />
+</MainLayout>

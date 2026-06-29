@@ -1,0 +1,35 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  image?: string;        // optional background photo -> dark editorial hero
+  align?: 'center' | 'left';
+}
+const { eyebrow, title, subtitle, image, align = 'center' } = Astro.props;
+const dark = !!image;
+const alignCls = align === 'center' ? 'text-center mx-auto items-center' : 'text-left';
+---
+
+{dark ? (
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <img src={image} alt="" class="img-cover" loading="eager" onerror="this.parentElement.style.background='linear-gradient(135deg,var(--berry),oklch(28% 0.07 358))';this.style.display='none'" />
+      <div class="absolute inset-0" style="background:linear-gradient(135deg,oklch(30% 0.09 358 / 0.84),oklch(24% 0.06 358 / 0.74))"></div>
+    </div>
+    <div class={`relative container-lux py-20 lg:py-28 text-white max-w-3xl ${alignCls}`}>
+      {eyebrow && <p class="eyebrow text-white/70 mb-4">{eyebrow}</p>}
+      <h1 class="display-lg mb-4">{title}</h1>
+      {subtitle && <p class="text-white/80 text-lg leading-relaxed max-w-2xl mx-auto">{subtitle}</p>}
+    </div>
+  </section>
+) : (
+  <section class="bg-base-200/60 border-b border-[var(--hairline)]">
+    <div class={`container-lux py-16 lg:py-24 max-w-3xl flex flex-col ${alignCls}`}>
+      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+      <h1 class="display-lg text-base-content mb-4">{title}</h1>
+      {subtitle && <p class="text-base-content/60 text-lg leading-relaxed">{subtitle}</p>}
+      <hr class="hairline-short mt-7" />
+    </div>
+  </section>
+)}

@@ -1,0 +1,115 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import CustomOrderBuilder from '@/components/custom/CustomOrderBuilder.tsx';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+const es = lang === 'es';
+
+const steps = [
+  {
+    n: '1',
+    paths: ['M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-4.6-4.6a1 1 0 0 1 0-1.4L15.3 2.7a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4z', 'M14 7l3 3M11 10l2 2M8 13l2 2'],
+    title: es ? 'Elige el Tamaño' : 'Select Size',
+    desc: es ? 'Escoge la base perfecta para tu reunión, desde porciones íntimas hasta grandes celebraciones.' : 'Choose the perfect base for your gathering, from intimate servings to grand celebrations.',
+  },
+  {
+    n: '2',
+    paths: ['M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7z'],
+    title: es ? 'Escoge Sabores' : 'Choose Flavors',
+    desc: es ? 'Selecciona entre nuestros rellenos y coberturas hechos a mano para diseñar tu perfil de sabor.' : 'Select from our handmade fillings and toppings to design your flavor profile.',
+  },
+  {
+    n: '3',
+    paths: ['m12 3 1.9 3.8 4.2.6-3 3 .7 4.2-3.8-2-3.8 2 .7-4.2-3-3 4.2-.6z'],
+    title: es ? 'Personaliza' : 'Personalize',
+    desc: es ? 'Añade mensajes personalizados, detalles de color y toques únicos para el momento perfecto.' : 'Add custom messages, color details, and unique touches for the perfect moment.',
+  },
+];
+---
+
+<MainLayout
+  title={t('customOrders.title')}
+  description={es
+    ? 'Pedidos personalizados de pavlovas, tortas y postres en Tampa. Diseñados especialmente para tu ocasión.'
+    : 'Custom pavlovas, cakes, and desserts in Tampa. Designed specially for your occasion.'}
+>
+
+  <!-- ════════ HERO ════════ -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/custom_cake.png" alt={es ? 'Pastel personalizado' : 'Custom dessert'} class="w-full h-full object-cover" loading="eager" />
+      <div class="absolute inset-0 bg-[#4d2236]/78"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#4d2236]/45 via-transparent to-[#4d2236]/60"></div>
+    </div>
+    <div class="reveal reveal-1 relative container-lux text-center max-w-2xl mx-auto py-20 lg:py-28">
+      <p class="eyebrow text-[var(--blush)] mb-5">{es ? 'Confecciones a Medida' : 'Bespoke Confections'}</p>
+      <h1 class="font-serif text-5xl lg:text-[3.75rem] leading-[1.04] text-white mb-6">
+        {es ? 'Diseña Tu' : 'Design Your'}<br/>
+        <span class="text-script text-[var(--blush)]!">{es ? 'Postre Soñado' : 'Dream Dessert'}</span>{es ? '' : '.'}
+      </h1>
+      <p class="text-white/75 leading-relaxed mb-9 max-w-md mx-auto">
+        {es
+          ? 'Cada celebración merece una obra maestra. Desde cumpleaños hasta bodas, nuestras pavlovas personalizadas y tortas especiales se elaboran a mano para reflejar tu historia única.'
+          : 'Every celebration deserves a masterpiece. From birthdays to weddings, our custom pavlovas and specialty cakes are handcrafted to reflect your unique story.'}
+      </p>
+      <a href="#builder" class="inline-flex items-center justify-center gap-2.5 rounded-full bg-[var(--cta)] text-white text-[0.7rem] font-bold tracking-[0.22em] uppercase px-9 h-12 hover:bg-[var(--cta-hover)] transition-colors shadow-lg shadow-black/20">
+        {es ? 'Iniciar Pedido' : 'Start Custom Order'}
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ════════ THE CRAFTING PROCESS ════════ -->
+  <section class="bg-[var(--blush-soft)] py-16 lg:py-24">
+    <div class="container-lux text-center">
+      <h2 class="reveal font-serif text-4xl lg:text-5xl text-base-content mb-3">{es ? 'El Proceso Artesanal' : 'The Crafting Process'}</h2>
+      <p class="reveal reveal-2 text-base-content/55 max-w-xl mx-auto mb-14 text-sm">
+        {es ? 'Tres simples pasos para tu postre de celebración personalizado.' : 'Three simple steps to your personalized celebration dessert.'}
+      </p>
+      <div class="grid md:grid-cols-3 gap-12 lg:gap-16 max-w-4xl mx-auto" data-reveal>
+        {steps.map((s) => (
+          <div class="text-center">
+            <div class="inline-grid place-items-center w-16 h-16 rounded-full bg-[var(--blush-soft)] text-[var(--cta)] mb-5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                {s.paths.map((p) => <path d={p}/>)}
+              </svg>
+            </div>
+            <h3 class="font-serif text-xl text-base-content mb-2">{s.n}. {s.title}</h3>
+            <p class="text-sm text-base-content/55 leading-relaxed max-w-xs mx-auto">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ ORDER BUILDER ════════ -->
+  <section id="builder" class="bg-base-100 py-16 lg:py-24 scroll-mt-24">
+    <div class="reveal container-lux">
+      <CustomOrderBuilder lang={lang} client:load />
+    </div>
+  </section>
+
+  <!-- ════════ NEED GUIDANCE ════════ -->
+  <section class="bg-[var(--blush-soft)] py-16 lg:py-20">
+    <div class="reveal container-lux text-center max-w-xl mx-auto">
+      <h2 class="font-serif text-3xl lg:text-4xl text-base-content mb-3">{es ? '¿Necesitas Orientación?' : 'Need a little guidance?'}</h2>
+      <p class="text-base-content/60 text-sm leading-relaxed mb-8">
+        {es
+          ? 'Nuestros expertos reposteros están disponibles para consultas directas y ayudarte a diseñar el postre perfecto para tu día especial.'
+          : 'Our pastry experts are available for direct consultations to help you design the perfect dessert for your special day.'}
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="https://wa.me/18139305229" target="_blank" rel="noopener" class="inline-flex items-center gap-2.5 rounded-full bg-[#25D366] text-white text-[0.7rem] font-bold tracking-[0.18em] uppercase px-8 h-12 hover:brightness-95 transition shadow-lg shadow-[#25D366]/25">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.515 5.26l-.999 3.648 3.864-1.013z"/></svg>
+          {es ? 'Pedir por WhatsApp' : 'Order via WhatsApp'}
+        </a>
+        <a href="mailto:hello@pavlovalovetampa.com" class="inline-flex items-center gap-2.5 rounded-full border border-[var(--cta)]/40 text-[var(--cta)] text-[0.7rem] font-bold tracking-[0.18em] uppercase px-8 h-12 hover:bg-[var(--cta)] hover:text-white hover:border-transparent transition">
+          {es ? 'Escribir al Equipo' : 'Email Our Team'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

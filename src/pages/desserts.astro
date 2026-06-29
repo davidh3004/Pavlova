@@ -1,0 +1,87 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import { COL, queryEq } from '@/server/store';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+
+let desserts: any[] = [];
+try {
+  const all = (await queryEq(COL.products, 'available', true, { orderBy: 'sortOrder', dir: 'asc' }))
+    .map((p) => ({ ...p, price: String(p.price) }));
+  desserts = all.filter((p: any) =>
+    ['pavlova', 'cake', 'dessert', 'pastry', 'postre', 'pastel', 'torta'].some((kw) =>
+      (p.name || '').toLowerCase().includes(kw) ||
+      (p.nameEs || '').toLowerCase().includes(kw) ||
+      (p.description || '').toLowerCase().includes(kw)
+    )
+  ).slice(0, 12);
+  if (desserts.length === 0) desserts = all.slice(0, 12);
+} catch (_) {}
+
+const fmtPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+const nm = (p: any) => (lang === 'es' ? p.nameEs || p.name : p.name);
+const desc = (p: any) => (lang === 'es' ? p.descriptionEs || p.description : p.description);
+---
+
+<MainLayout
+  title={t('desserts.title')}
+  description={lang === 'es'
+    ? 'Postres artesanales de Pavlova Love Tampa — pavlovas, tortas y pasteles hechos con amor.'
+    : 'Handcrafted desserts from Pavlova Love Tampa — pavlovas, cakes, and pastries made with love.'}
+>
+
+  <PageHero
+    eyebrow={lang === 'es' ? 'Postres Artesanales' : 'Handcrafted Desserts'}
+    title={t('desserts.title')}
+    subtitle={t('desserts.subtitle')}
+  />
+
+  <section class="container-lux section">
+    {desserts.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
+        {desserts.map((product: any) => (
+          <a href="/menu" class="card-lux group flex flex-col">
+            <div class="aspect-square overflow-hidden bg-base-200">
+              {product.imageUrl ? (
+                <img src={product.imageUrl} alt={nm(product)} class="img-cover" loading="lazy" width="320" height="320" />
+              ) : (
+                <div class="w-full h-full grid place-items-center bg-[var(--blush-soft)] text-primary/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M7 14h10l-1 7H8zM12 3c2 2 3 4 3 6a3 3 0 0 1-6 0c0-2 1-4 3-6z"/></svg>
+                </div>
+              )}
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="font-serif text-lg leading-snug text-base-content group-hover:text-primary transition-colors">{nm(product)}</h3>
+              {desc(product) && <p class="text-xs text-base-content/55 line-clamp-2 mt-1 flex-1">{desc(product)}</p>}
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-[var(--hairline)]">
+                <span class="font-serif text-lg text-primary">{fmtPrice(product.price)}</span>
+                <span class="text-sm font-semibold text-base-content/60 group-hover:text-primary transition-colors">{lang === 'es' ? 'Ordenar →' : 'Order →'}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20 rounded-[var(--radius-box)] bg-base-200/50 border border-[var(--hairline)]">
+        <p class="font-serif text-2xl text-base-content/40">{lang === 'es' ? 'Postres disponibles próximamente' : 'Desserts coming soon'}</p>
+      </div>
+    )}
+  </section>
+
+  <!-- CTAs -->
+  <section class="bg-base-200/60 border-t border-[var(--hairline)]">
+    <div class="container-lux section text-center max-w-2xl mx-auto">
+      <p class="eyebrow mb-3">{lang === 'es' ? 'Pedidos Especiales' : 'Special Orders'}</p>
+      <h2 class="display-lg text-base-content mb-4">{lang === 'es' ? '¿Necesitas algo especial?' : 'Need Something Special?'}</h2>
+      <p class="text-base-content/60 mb-8">{lang === 'es' ? 'Creamos postres personalizados para cumpleaños, bodas y cualquier ocasión especial.' : 'We create custom desserts for birthdays, weddings, and any special occasion.'}</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="/custom-orders" class="btn btn-cta btn-lg px-8">{t('desserts.customCta')}</a>
+        <a href="/catering" class="btn btn-quiet btn-lg px-8">{t('desserts.cateringCta')}</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

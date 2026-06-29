@@ -1,0 +1,10 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminGallery from '@/components/admin/AdminGallery';
+
+import { getAdminId } from '@/server/auth';
+if (!getAdminId(Astro.cookies)) return Astro.redirect('/admin');
+---
+<AdminLayout title="Gallery" currentPath="/admin/gallery">
+  <AdminGallery client:load />
+</AdminLayout>

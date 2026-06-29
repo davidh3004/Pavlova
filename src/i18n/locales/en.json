@@ -1,0 +1,294 @@
+{
+  "lang": "en",
+  "nav": {
+    "dailyMenu": "Daily Menu",
+    "menu": "Menu",
+    "desserts": "Desserts",
+    "catering": "Catering",
+    "customOrders": "Custom Orders",
+    "about": "About",
+    "contact": "Contact",
+    "orderNow": "Order Now",
+    "cart": "Cart",
+    "admin": "Admin",
+    "gallery": "Gallery",
+    "reviews": "Reviews"
+  },
+  "home": {
+    "hero": {
+      "badge": "Venezuelan Bakery & Latin Kitchen · Tampa, FL",
+      "title": "A Taste of Venezuela in Every Bite",
+      "subtitle": "Handcrafted pavlovas, fresh arepas, and authentic Latin flavors — made with love every morning in Tampa.",
+      "orderBtn": "Order Pickup",
+      "menuBtn": "Today's Menu",
+      "cateringBtn": "Catering & Custom",
+      "pickup": "Order ahead · ready for pickup",
+      "scroll": "Discover"
+    },
+    "values": {
+      "eyebrow": "Why Pavlova Love",
+      "fresh": "Baked From Scratch Daily",
+      "freshText": "Our kitchen opens at dawn. Meringue, masa, and pastry — everything made fresh each morning.",
+      "pickup": "Order Ahead, Skip the Line",
+      "pickupText": "Reserve online and pick up at our Tampa counter. The fastest way to get your favorites.",
+      "catering": "Catering & Custom Orders",
+      "cateringText": "Pavlova towers, dessert tables, and full Latin menus for events of every size."
+    },
+    "today": {
+      "eyebrow": "Fresh Today",
+      "title": "Today's Daily Menu",
+      "text": "Our menu changes with the morning. See what we baked today and reserve your favorites before they sell out.",
+      "cta": "View Today's Menu"
+    },
+    "featured": {
+      "eyebrow": "Our Specialties",
+      "title": "Signature Creations",
+      "subtitle": "Made fresh every morning with the finest ingredients",
+      "cta": "See Full Menu"
+    },
+    "about": {
+      "badge": "Our Story",
+      "title": "Venezuelan Soul, Tampa Heart",
+      "p1": "Pavlova Love Tampa was born from a passion for authentic Venezuelan flavors and the timeless art of pavlova-making. We blend Latin culinary traditions with the warmth of a family kitchen.",
+      "p2": "From our signature meringue pavlovas to fresh arepas, hallacas, and café con leche — every item is made from scratch daily in our Tampa kitchen.",
+      "cta": "Learn Our Story"
+    },
+    "catering": {
+      "badge": "Events & Catering",
+      "title": "Making Your Events Unforgettable",
+      "text": "From intimate gatherings to corporate events, we bring authentic Venezuelan flavors to your celebration. Custom menus, pavlova towers, and full catering packages available.",
+      "cta": "Request a Quote"
+    },
+    "reviews": {
+      "title": "What Our Community Says"
+    },
+    "delivery": {
+      "eyebrow": "How to Order",
+      "directTitle": "Order Direct for Pickup",
+      "directText": "Best prices, freshest pickup, and it supports us most. Reserve online and we'll have it ready.",
+      "directCta": "Order for Pickup",
+      "secondaryTitle": "Prefer Delivery?",
+      "secondarySubtitle": "Find us on these platforms",
+      "title": "Order on Your Favorite Platform",
+      "subtitle": "Available for delivery"
+    },
+    "location": {
+      "eyebrow": "Visit Us",
+      "title": "Find Us in Tampa",
+      "getDirections": "Get Directions",
+      "callUs": "Call Us",
+      "addressLabel": "Address",
+      "hoursLabel": "Hours",
+      "contactLabel": "Contact"
+    }
+  },
+  "menu": {
+    "title": "Today's Daily Menu",
+    "date": "Menu for",
+    "noMenu": "No menu available for today",
+    "noMenuSub": "Check back soon or call us at (813) 930-5229",
+    "soldOut": "Sold Out",
+    "featured": "Featured",
+    "available": "Available"
+  },
+  "order": {
+    "title": "Order Online",
+    "subtitle": "Pickup at 3909 W Broad St, Tampa",
+    "all": "All",
+    "addToCart": "Add to Cart",
+    "soldOut": "Sold Out",
+    "noProducts": "No products in this category yet",
+    "specialInstructions": "Special instructions (optional)",
+    "qty": "Quantity"
+  },
+  "cart": {
+    "title": "Your Order",
+    "empty": "Your cart is empty",
+    "emptySubtitle": "Browse our menu and add items to start your order",
+    "subtotal": "Subtotal",
+    "checkout": "Go to Checkout",
+    "continueShopping": "Continue Shopping",
+    "remove": "Remove",
+    "item": "item",
+    "items": "items",
+    "each": "each"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Pickup at our Tampa location",
+    "pickupDetails": "Pickup Details",
+    "yourName": "Your Name",
+    "phone": "Phone Number",
+    "pickupTime": "Pickup Time",
+    "selectTime": "Select pickup time...",
+    "apply": "Apply",
+    "paymentMethod": "Payment Method",
+    "payAtPickup": "Pay at Pickup (Cash / Card)",
+    "payByCard": "Pay by Card Now (Square)",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "orderConfirmed": "Order Confirmed!",
+    "orderMsg": "Your order has been placed. We'll have it ready at your selected pickup time.",
+    "orderNumber": "Order #",
+    "newOrder": "Place Another Order",
+    "cardDetails": "Card Details",
+    "backToOrder": "Back to Order"
+  },
+  "desserts": {
+    "title": "Desserts & Pavlovas",
+    "subtitle": "Our signature sweet creations — made to order or available daily",
+    "customCta": "Request a Custom Order",
+    "cateringCta": "Dessert Catering"
+  },
+  "catering": {
+    "title": "Professional Catering",
+    "subtitle": "Authentic Venezuelan flavors for your events — from intimate dinners to grand celebrations",
+    "formTitle": "Request a Catering Quote",
+    "name": "Your Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "eventDate": "Event Date",
+    "eventType": "Event Type",
+    "guestCount": "Estimated Guests",
+    "details": "Event Details & Menu Requirements",
+    "submit": "Send Request",
+    "sending": "Sending...",
+    "success": "Request received! We'll contact you within 24 hours.",
+    "eventTypes": {
+      "corporate": "Corporate Event",
+      "wedding": "Wedding / Quinceañera",
+      "birthday": "Birthday Party",
+      "social": "Social Gathering",
+      "holiday": "Holiday Party",
+      "other": "Other"
+    }
+  },
+  "customOrders": {
+    "title": "Custom Dessert Orders",
+    "subtitle": "Your dream dessert, made to order. Pavlovas, cakes, pastry trays, and more.",
+    "formTitle": "Submit Your Request",
+    "name": "Your Name",
+    "email": "Email",
+    "phone": "Phone",
+    "dessertType": "Dessert Type",
+    "size": "Size / Servings",
+    "flavors": "Flavors & Preferences",
+    "occasion": "Occasion",
+    "neededBy": "Needed By",
+    "imageUrl": "Inspiration Image URL (optional)",
+    "notes": "Additional Notes",
+    "submit": "Submit Request",
+    "sending": "Sending...",
+    "success": "Request received! We'll get back to you within 24 hours.",
+    "types": {
+      "pavlova": "Pavlova",
+      "cake": "Cake",
+      "pastry": "Pastry Assortment",
+      "tres_leches": "Tres Leches",
+      "other": "Other"
+    }
+  },
+  "about": {
+    "title": "Our Story",
+    "subtitle": "Venezuelan roots, Tampa heart",
+    "section1Title": "Born from Love",
+    "section1": "Pavlova Love Tampa was founded by a family passionate about sharing the rich culinary heritage of Venezuela with the Tampa Bay community. Every recipe has been passed down through generations, adapted with local ingredients, and perfected with care.",
+    "section2Title": "Crafted Every Morning",
+    "section2": "Our kitchen comes alive at 4am daily. From the meringue shells for our pavlovas to the masa for our arepas — everything is made from scratch. We don't believe in shortcuts when it comes to flavor.",
+    "section3Title": "Community First",
+    "section3": "We're more than a bakery — we're a gathering place. A slice of Venezuela in the heart of Tampa, where neighbors become familia over café con leche and fresh pastries.",
+    "values": {
+      "fresh": "Made Fresh Daily",
+      "authentic": "Authentic Recipes",
+      "family": "Family Owned",
+      "community": "Community First"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We'd love to hear from you",
+    "address": "Address",
+    "phone": "Phone",
+    "hours": "Hours",
+    "social": "Follow Us",
+    "callNow": "Call Now",
+    "whatsapp": "WhatsApp",
+    "directions": "Get Directions",
+    "messageTitle": "Send a Message",
+    "yourName": "Your Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent! We'll get back to you soon.",
+    "hoursDetail": {
+      "weekday": "Mon – Fri: 7:00 am – 7:00 pm",
+      "saturday": "Saturday: 7:00 am – 7:00 pm",
+      "sunday": "Sunday: 8:00 am – 3:00 pm"
+    }
+  },
+  "reviews": {
+    "title": "Customer Reviews",
+    "subtitle": "What our community says about us",
+    "noReviews": "No reviews yet — be the first!",
+    "from": "via"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "A glimpse into our kitchen and creations",
+    "all": "All",
+    "close": "Close",
+    "noImages": "No images yet"
+  },
+  "footer": {
+    "tagline": "Authentic Venezuelan flavors, made with love in Tampa, FL.",
+    "quickLinks": "Quick Links",
+    "hours": "Hours",
+    "rights": "All rights reserved."
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign In",
+      "error": "Invalid credentials"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "products": "Products",
+      "menu": "Daily Menu",
+      "catering": "Catering",
+      "customOrders": "Custom Orders",
+      "reviews": "Reviews",
+      "gallery": "Gallery",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "create": "Create",
+      "update": "Update",
+      "loading": "Loading...",
+      "noData": "No data found",
+      "confirm": "Are you sure?",
+      "yes": "Yes, delete",
+      "search": "Search..."
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "minLength": "Too short",
+    "generic": "Something went wrong. Please try again."
+  }
+}

@@ -1,0 +1,111 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+const es = lang === 'es';
+
+const values = [
+  { key: 'fresh', img: '/images/icon-about-fresh.png' },
+  { key: 'authentic', img: '/images/icon-about-authentic.png' },
+  { key: 'family', svg: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20a6 6 0 0 1 12 0M15 20a6 6 0 0 1 6-6' },
+  { key: 'community', img: '/images/icon-about-community.png' },
+];
+---
+
+<MainLayout
+  title={t('about.title')}
+  description={es
+    ? 'La historia de Pavlova Love Tampa — una familia venezolana compartiendo sabores auténticos en Tampa, FL.'
+    : 'The story of Pavlova Love Tampa — a Venezuelan family sharing authentic flavors in Tampa, FL.'}
+>
+
+  <!-- ════════ HERO ════════ -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/cafe-interior.png" alt={es ? 'Interior de la cafetería' : 'Our café interior'} class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-[#4d2236]/72"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#4d2236]/40 via-transparent to-[#4d2236]/58"></div>
+    </div>
+    <div class="reveal reveal-1 relative container-lux text-center min-h-[440px] lg:min-h-[520px] flex flex-col items-center justify-center pt-16 pb-28">
+      <p class="eyebrow text-[var(--blush)] mb-4">{es ? 'Creando Dulces Recuerdos' : 'Crafting Sweet Memories'}</p>
+      <h1 class="text-script text-white! text-6xl lg:text-[7rem] leading-[0.95]">{t('about.title')}</h1>
+    </div>
+  </section>
+
+  <!-- ════════ VALUE CARDS ════════ -->
+  <section class="container-lux -mt-16 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-5" data-reveal>
+      {values.map((v) => (
+        <div class="bg-base-100 rounded-[20px] border border-[var(--hairline)] p-6 lg:p-7 shadow-[var(--shadow-lift)] text-center">
+          <div class="inline-grid place-items-center w-12 h-12 rounded-full bg-[var(--blush-soft)] mb-3.5">
+            {v.img ? (
+              <span
+                class="block w-6 h-6 bg-[var(--rose)]"
+                style={`-webkit-mask:url(${v.img}) center/contain no-repeat; mask:url(${v.img}) center/contain no-repeat;`}
+              ></span>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d={v.svg}/></svg>
+            )}
+          </div>
+          <p class="font-semibold text-sm text-base-content/80">{t(`about.values.${v.key}`)}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════════ STORY ════════ -->
+  <section class="container-lux py-20 lg:py-28 space-y-20 lg:space-y-28">
+
+    <!-- 01 — Born from Love -->
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="reveal reveal-left order-2 lg:order-1 text-center lg:text-left">
+        <span class="block font-serif text-7xl lg:text-8xl leading-none text-[var(--blush)] mb-3">01</span>
+        <h2 class="font-serif text-4xl lg:text-5xl text-base-content mb-5">{t('about.section1Title')}</h2>
+        <p class="text-base-content/65 leading-relaxed text-lg max-w-md mx-auto lg:mx-0">{t('about.section1')}</p>
+      </div>
+      <div class="reveal reveal-right order-1 lg:order-2 overflow-hidden rounded-[var(--radius-box)] shadow-[var(--shadow-lift)]">
+        <img src="/images/signature-cake.png" alt={es ? 'Nuestra historia' : 'Our story'} class="w-full aspect-[4/5] object-cover" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- 02 — Crafted Every Morning -->
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="reveal reveal-left overflow-hidden rounded-[var(--radius-box)] shadow-[var(--shadow-lift)]">
+        <img src="/images/pastries.png" alt={es ? 'Hecho fresco cada mañana' : 'Made fresh every morning'} class="w-full aspect-[5/4] object-cover" loading="lazy" />
+      </div>
+      <div class="reveal reveal-right text-center lg:text-left">
+        <span class="block font-serif text-7xl lg:text-8xl leading-none text-[var(--blush)] mb-3">02</span>
+        <h2 class="font-serif text-4xl lg:text-5xl text-base-content mb-5">{t('about.section2Title')}</h2>
+        <p class="text-base-content/65 leading-relaxed text-lg max-w-md mx-auto lg:mx-0">{t('about.section2')}</p>
+      </div>
+    </div>
+
+    <!-- 03 — Community First -->
+    <div class="reveal reveal-scale relative rounded-[var(--radius-box)] bg-[var(--blush-soft)] p-12 lg:p-20 text-center max-w-3xl mx-auto">
+      <span class="block font-serif text-7xl lg:text-8xl leading-none text-[var(--rose)]/25 mb-3">03</span>
+      <h2 class="font-serif text-4xl lg:text-5xl text-base-content mb-5">{t('about.section3Title')}</h2>
+      <p class="text-base-content/65 leading-relaxed text-lg max-w-xl mx-auto">{t('about.section3')}</p>
+    </div>
+  </section>
+
+  <!-- ════════ READY TO TASTE ════════ -->
+  <section class="bg-[var(--color-primary)] text-white">
+    <div class="reveal container-lux py-20 lg:py-24 text-center max-w-xl mx-auto">
+      <h2 class="font-serif text-4xl lg:text-5xl mb-4">{es ? '¿Listo para Probar?' : 'Ready to Taste?'}</h2>
+      <p class="text-white/70 leading-relaxed mb-9">
+        {es ? 'Visítanos en Tampa o haz tu pedido en línea para descubrir los sabores de Pavlova Love.' : 'Visit us in Tampa or order online to experience the flavors of Pavlova Love.'}
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a href="/menu" class="inline-flex items-center justify-center rounded-full bg-[var(--blush-soft)] text-[var(--color-primary)] text-[0.7rem] font-bold tracking-[0.2em] uppercase px-9 h-12 hover:bg-white transition-colors">
+          {es ? 'Ordenar Ahora' : 'Order Now'}
+        </a>
+        <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/40 text-white text-[0.7rem] font-bold tracking-[0.2em] uppercase px-9 h-12 hover:bg-white/10 transition-colors">
+          {es ? 'Contacto' : 'Contact'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

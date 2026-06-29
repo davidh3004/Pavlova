@@ -1,0 +1,10 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminMenu from '@/components/admin/AdminMenu';
+
+import { getAdminId } from '@/server/auth';
+if (!getAdminId(Astro.cookies)) return Astro.redirect('/admin');
+---
+<AdminLayout title="Daily Menu" currentPath="/admin/menu">
+  <AdminMenu client:load />
+</AdminLayout>

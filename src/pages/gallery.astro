@@ -1,0 +1,113 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import { COL, listAll } from '@/server/store';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+
+let galleryItems: any[] = [];
+try {
+  galleryItems = await listAll(COL.gallery, { orderBy: 'sortOrder', dir: 'asc' });
+} catch (_) {}
+---
+
+<MainLayout
+  title={t('gallery.title')}
+  description={lang === 'es'
+    ? 'Galería de fotos de Pavlova Love Tampa — nuestras creaciones, cocina y momentos especiales.'
+    : 'Photo gallery of Pavlova Love Tampa — our creations, kitchen, and special moments.'}
+>
+
+  <PageHero eyebrow={lang === 'es' ? 'Fotos' : 'Photos'} title={t('gallery.title')} subtitle={t('gallery.subtitle')} />
+
+  <!-- Gallery -->
+  <section class="container-lux section">
+    {galleryItems.length === 0 ? (
+      <div class="text-center py-20 rounded-[var(--radius-box)] bg-base-200/50 border border-[var(--hairline)] max-w-xl mx-auto">
+        <div class="inline-grid place-items-center w-14 h-14 rounded-full bg-white border border-[var(--hairline)] text-primary mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 16-5-5L5 21"/></svg>
+        </div>
+        <p class="font-serif text-2xl text-base-content/50 mb-2">{t('gallery.noImages')}</p>
+        <p class="text-sm text-base-content/50 mb-6">{lang === 'es' ? 'Síguenos en Instagram para ver nuestras fotos' : 'Follow us on Instagram to see our photos'}</p>
+        <a href="https://www.instagram.com/pavlovalove.tampa/" target="_blank" rel="noopener noreferrer" class="btn btn-quiet btn-sm">@pavlovalove.tampa</a>
+      </div>
+    ) : (
+      <div id="gallery-grid" class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+        {galleryItems.map((item: any, idx: number) => (
+          <button
+            class="block w-full break-inside-avoid rounded-[var(--radius-box)] overflow-hidden cursor-pointer gallery-item border border-[var(--hairline)] bg-white shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-lift)] transition-shadow text-left"
+            data-idx={idx}
+            data-src={item.imageUrl || item.url}
+            data-alt={lang === 'es' ? (item.captionEs || item.caption || '') : (item.caption || '')}
+          >
+            <img
+              src={item.imageUrl || item.url}
+              alt={lang === 'es' ? (item.captionEs || item.caption || 'Gallery') : (item.caption || 'Gallery')}
+              class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
+              loading="lazy"
+            />
+            {item.caption && (
+              <div class="p-3">
+                <p class="text-xs text-base-content/60">{lang === 'es' ? (item.captionEs || item.caption) : item.caption}</p>
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- Instagram CTA -->
+  <section class="bg-base-200/60 border-t border-[var(--hairline)]">
+    <div class="container-lux py-16 text-center max-w-xl mx-auto">
+      <p class="eyebrow mb-3">@pavlovalove.tampa</p>
+      <h2 class="display-lg text-base-content mb-3">{lang === 'es' ? 'Síguenos en Instagram' : 'Follow Us on Instagram'}</h2>
+      <p class="text-base-content/60 mb-7 text-sm">{lang === 'es' ? 'Nuevas creaciones cada día.' : 'New creations every day.'}</p>
+      <a href="https://www.instagram.com/pavlovalove.tampa/" target="_blank" rel="noopener noreferrer" class="btn btn-cta px-8">{lang === 'es' ? 'Ver nuestro Instagram' : 'See our Instagram'}</a>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay hidden" role="dialog" aria-modal="true">
+    <button id="lightbox-close" class="absolute top-4 right-4 grid place-items-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white z-10 transition-colors" aria-label={t('gallery.close')}>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <img id="lightbox-img" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain rounded-xl" />
+  </div>
+
+  <script>
+    const items = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    items.forEach((item) => {
+      item.addEventListener('click', () => {
+        const src = item.getAttribute('data-src') || '';
+        const alt = item.getAttribute('data-alt') || '';
+        if (lightboxImg) { lightboxImg.src = src; lightboxImg.alt = alt; }
+        lightbox?.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    const closeLightbox = () => {
+      lightbox?.classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+
+</MainLayout>

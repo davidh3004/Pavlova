@@ -1,0 +1,10 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminCatering from '@/components/admin/AdminCatering';
+
+import { getAdminId } from '@/server/auth';
+if (!getAdminId(Astro.cookies)) return Astro.redirect('/admin');
+---
+<AdminLayout title="Catering Inquiries" currentPath="/admin/catering">
+  <AdminCatering client:load />
+</AdminLayout>

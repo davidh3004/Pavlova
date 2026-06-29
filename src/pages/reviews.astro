@@ -1,0 +1,72 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import { detectLang, useTranslations } from '@/i18n/utils';
+import { COL, listAll } from '@/server/store';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+
+let reviews: any[] = [];
+try {
+  reviews = await listAll(COL.reviews, { orderBy: 'sortOrder', dir: 'asc' });
+} catch (_) {}
+---
+
+<MainLayout
+  title={t('reviews.title')}
+  description={lang === 'es'
+    ? 'Lee lo que nuestra comunidad dice sobre Pavlova Love Tampa.'
+    : 'Read what our community says about Pavlova Love Tampa.'}
+>
+
+  <PageHero
+    eyebrow={lang === 'es' ? 'Reseñas de Clientes' : 'Customer Reviews'}
+    title={t('reviews.title')}
+    subtitle={t('reviews.subtitle')}
+  />
+
+  <section class="container-lux section">
+    {reviews.length === 0 ? (
+      <div class="text-center py-20 rounded-[var(--radius-box)] bg-base-200/50 border border-[var(--hairline)] max-w-xl mx-auto">
+        <p class="font-serif text-2xl text-base-content/40">{t('reviews.noReviews')}</p>
+      </div>
+    ) : (
+      <div class="columns-1 md:columns-2 lg:columns-3 gap-7 space-y-7">
+        {reviews.map((review: any) => (
+          <figure class="break-inside-avoid bg-white rounded-[var(--radius-box)] border border-[var(--hairline)] p-7 shadow-[var(--shadow-soft)]">
+            <div class="flex text-[var(--gold)] mb-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill={i < (review.rating || 5) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.5"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.1 1.2 6L12 17.8 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
+              ))}
+            </div>
+            <blockquote class="font-serif text-lg text-base-content/80 leading-relaxed italic">“{review.content || review.text}”</blockquote>
+            <figcaption class="mt-5 pt-5 border-t border-[var(--hairline)] flex items-center gap-3">
+              <div class="grid place-items-center w-9 h-9 rounded-full bg-[var(--blush)] text-primary font-semibold text-sm">
+                {(review.authorName || review.author || '?').charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p class="font-semibold text-sm text-base-content">{review.authorName || review.author}</p>
+                {review.platform && <p class="text-xs text-base-content/40">{t('reviews.from')} {review.platform}</p>}
+              </div>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-base-200/60 border-t border-[var(--hairline)]">
+    <div class="container-lux py-16 text-center max-w-xl mx-auto">
+      <p class="eyebrow mb-3">{lang === 'es' ? 'Tu Opinión Importa' : 'Your Voice Matters'}</p>
+      <h2 class="display-lg text-base-content mb-3">{lang === 'es' ? '¡Nos encanta tu feedback!' : 'We Love Your Feedback!'}</h2>
+      <p class="text-base-content/60 mb-7">{lang === 'es' ? 'Déjanos una reseña en Instagram o Google para ayudarnos a crecer.' : 'Leave us a review on Instagram or Google to help us grow.'}</p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <a href="https://www.instagram.com/pavlovalove.tampa/" target="_blank" rel="noopener noreferrer" class="btn btn-quiet px-7">Instagram</a>
+        <a href="https://g.page/r/" target="_blank" rel="noopener noreferrer" class="btn btn-quiet px-7">Google</a>
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

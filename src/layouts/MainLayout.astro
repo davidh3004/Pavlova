@@ -1,0 +1,188 @@
+---
+import { detectLang, useTranslations } from '@/i18n/utils';
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import FloatingWidget from '@/components/FloatingWidget.astro';
+import CartDrawer from '@/components/CartDrawer';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Pavlova Love Tampa',
+  description = 'Authentic Venezuelan bakery, café, and Latin kitchen in Tampa, FL. Handcrafted pavlovas, fresh arepas, and more.',
+  image = '/images/hero-pavlova.png',
+  noindex = false,
+} = Astro.props;
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const { t } = useTranslations(lang);
+const fullTitle = title === 'Pavlova Love Tampa' ? title : `${title} | Pavlova Love Tampa`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://pavlovalovetampa.com').href;
+
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Bakery',
+  name: 'Pavlova Love Tampa',
+  description:
+    'Venezuelan bakery, café, and Latin kitchen in Tampa, FL — handcrafted pavlovas, fresh arepas, desserts, daily menus, and catering.',
+  servesCuisine: ['Venezuelan', 'Latin American', 'Bakery', 'Café', 'Desserts'],
+  image: new URL(image, Astro.site ?? 'https://pavlovalovetampa.com').href,
+  url: 'https://pavlovalovetampa.com',
+  telephone: '+1-813-930-5229',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '3909 W Broad St',
+    addressLocality: 'Tampa',
+    addressRegion: 'FL',
+    postalCode: '33614',
+    addressCountry: 'US',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 28.0006, longitude: -82.5089 },
+  sameAs: ['https://www.instagram.com/pavlovalove.tampa/', 'https://bakesy.shop'],
+  acceptsReservations: 'False',
+  hasMenu: 'https://pavlovalovetampa.com/menu',
+};
+---
+
+<!doctype html>
+<html lang={lang} data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Enable scroll-reveal hidden state before first paint (avoids flash) -->
+    <script is:inline>document.documentElement.classList.add('js-reveal');</script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Pavlova Love Tampa" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_US' : 'en_US'} />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="theme-color" content="#FDFBF7" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+    <link rel="apple-touch-icon" href="/images/logo-mark.png" />
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+  </head>
+  <body class="bg-base-100 text-base-content min-h-screen">
+
+    <!-- Mobile nav drawer wrapper -->
+    <div class="drawer">
+      <input id="mobile-nav" type="checkbox" class="drawer-toggle" />
+
+      <div class="drawer-content flex flex-col min-h-screen">
+        <Navbar lang={lang} currentPath={Astro.url.pathname} />
+        <main class="flex-1">
+          <slot />
+        </main>
+        <Footer lang={lang} />
+      </div>
+
+      <!-- Mobile nav drawer -->
+      <div class="drawer-side z-50">
+        <label for="mobile-nav" aria-label="Close menu" class="drawer-overlay"></label>
+        <nav class="p-6 w-80 min-h-full bg-base-100 flex flex-col" aria-label="Mobile">
+          <div class="flex items-center justify-between mb-8">
+            <img src="/images/logo-mark.png" alt="Pavlova Love Tampa" class="h-12 w-auto" />
+            <label for="mobile-nav" class="p-2 -mr-2 rounded-lg hover:bg-base-200 cursor-pointer" aria-label="Close menu">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </label>
+          </div>
+          <ul class="flex flex-col gap-1 text-base">
+            {[
+              { href: '/', label: lang === 'es' ? 'Inicio' : 'Home', d: 'M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z' },
+              { href: '/menu', label: t('nav.menu'), d: 'M4 6h16M4 12h16M4 18h10' },
+              { href: '/catering', label: t('nav.catering'), d: 'M4 20h16M6 20V10a6 6 0 0 1 12 0v10M12 4v2' },
+              { href: '/custom-orders', label: t('nav.customOrders'), d: 'M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z' },
+              { href: '/about', label: t('nav.about'), d: 'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z' },
+              { href: '/contact', label: t('nav.contact'), d: 'M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z' },
+            ].map((link) => (
+              <li>
+                <a href={link.href} class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base-content/80 hover:bg-base-200 hover:text-primary transition-colors font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--rose)]"><path d={link.d}/></svg>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a href="/menu" class="btn btn-cta w-full mt-8">{t('nav.orderNow')}</a>
+          <div class="mt-auto pt-8 text-sm text-base-content/50">
+            <p>3909 W Broad St, Tampa, FL</p>
+            <a href="tel:+18139305229" class="link-underline">(813) 930-5229</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Cart Drawer (React Island) -->
+    <CartDrawer lang={lang} client:load />
+
+    <!-- Floating Widget -->
+    <FloatingWidget lang={lang} />
+
+    <!-- Scroll-reveal trigger (rAF-throttled; robust to hash jumps & restored scroll) -->
+    <script is:inline>
+      (function () {
+        function run() {
+          var els = Array.prototype.slice.call(
+            document.querySelectorAll('.reveal, [data-reveal]')
+          );
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (reduce) {
+            els.forEach(function (el) { el.classList.add('is-visible'); });
+            return;
+          }
+          var ticking = false;
+          function reveal() {
+            ticking = false;
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            for (var i = els.length - 1; i >= 0; i--) {
+              if (els[i].getBoundingClientRect().top < vh * 0.9) {
+                els[i].classList.add('is-visible');
+                els.splice(i, 1);
+              }
+            }
+            if (els.length === 0) {
+              window.removeEventListener('scroll', onScroll);
+              window.removeEventListener('resize', onScroll);
+            }
+          }
+          function onScroll() {
+            if (!ticking) { ticking = true; requestAnimationFrame(reveal); }
+          }
+          window.addEventListener('scroll', onScroll, { passive: true });
+          window.addEventListener('resize', onScroll, { passive: true });
+          reveal();
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', run);
+        } else {
+          run();
+        }
+      })();
+    </script>
+
+  </body>
+</html>

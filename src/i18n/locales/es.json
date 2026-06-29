@@ -1,0 +1,294 @@
+{
+  "lang": "es",
+  "nav": {
+    "dailyMenu": "Menú del Día",
+    "menu": "Menú",
+    "desserts": "Postres",
+    "catering": "Catering",
+    "customOrders": "Pedidos Especiales",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "orderNow": "Ordenar",
+    "cart": "Carrito",
+    "admin": "Admin",
+    "gallery": "Galería",
+    "reviews": "Reseñas"
+  },
+  "home": {
+    "hero": {
+      "badge": "Panadería Venezolana y Cocina Latina · Tampa, FL",
+      "title": "Un Sabor de Venezuela en Cada Bocado",
+      "subtitle": "Pavlovas artesanales, arepas frescas y sabores latinos auténticos — hechos con amor cada mañana en Tampa.",
+      "orderBtn": "Ordenar para Recoger",
+      "menuBtn": "Menú de Hoy",
+      "cateringBtn": "Catering y Especiales",
+      "pickup": "Ordena con anticipación · listo para recoger",
+      "scroll": "Descubre"
+    },
+    "values": {
+      "eyebrow": "Por Qué Pavlova Love",
+      "fresh": "Horneado Fresco Cada Día",
+      "freshText": "Nuestra cocina abre al amanecer. Merengue, masa y repostería — todo hecho fresco cada mañana.",
+      "pickup": "Ordena Antes, Evita la Fila",
+      "pickupText": "Reserva en línea y recoge en nuestro mostrador en Tampa. La forma más rápida de disfrutar tus favoritos.",
+      "catering": "Catering y Pedidos Especiales",
+      "cateringText": "Torres de pavlova, mesas de postres y menús latinos completos para eventos de todo tamaño."
+    },
+    "today": {
+      "eyebrow": "Fresco Hoy",
+      "title": "Menú del Día",
+      "text": "Nuestro menú cambia con la mañana. Mira lo que horneamos hoy y reserva tus favoritos antes de que se agoten.",
+      "cta": "Ver Menú de Hoy"
+    },
+    "featured": {
+      "eyebrow": "Nuestras Especialidades",
+      "title": "Creaciones Especiales",
+      "subtitle": "Hechas frescas cada mañana con los mejores ingredientes",
+      "cta": "Ver Menú Completo"
+    },
+    "about": {
+      "badge": "Nuestra Historia",
+      "title": "Alma Venezolana, Corazón de Tampa",
+      "p1": "Pavlova Love Tampa nació de una pasión por los sabores venezolanos auténticos y el arte atemporal de hacer pavlovas. Mezclamos las tradiciones culinarias latinas con la calidez de una cocina familiar.",
+      "p2": "Desde nuestras pavlovas de merengue hasta las arepas frescas, hallacas y café con leche — todo se hace desde cero cada día en nuestra cocina de Tampa.",
+      "cta": "Conoce Nuestra Historia"
+    },
+    "catering": {
+      "badge": "Eventos y Catering",
+      "title": "Haciendo Tus Eventos Inolvidables",
+      "text": "Desde reuniones íntimas hasta eventos corporativos, llevamos sabores venezolanos auténticos a tu celebración. Menús personalizados, torres de pavlova y paquetes de catering completos disponibles.",
+      "cta": "Solicitar Cotización"
+    },
+    "reviews": {
+      "title": "Lo Que Dice Nuestra Comunidad"
+    },
+    "delivery": {
+      "eyebrow": "Cómo Ordenar",
+      "directTitle": "Ordena Directo para Recoger",
+      "directText": "Mejores precios, lo más fresco al recoger, y es lo que más nos ayuda. Reserva en línea y lo tendremos listo.",
+      "directCta": "Ordenar para Recoger",
+      "secondaryTitle": "¿Prefieres Entrega?",
+      "secondarySubtitle": "Encuéntranos en estas plataformas",
+      "title": "Ordena en Tu Plataforma Favorita",
+      "subtitle": "Disponible para entrega"
+    },
+    "location": {
+      "eyebrow": "Visítanos",
+      "title": "Encuéntranos en Tampa",
+      "getDirections": "Cómo Llegar",
+      "callUs": "Llámanos",
+      "addressLabel": "Dirección",
+      "hoursLabel": "Horario",
+      "contactLabel": "Contacto"
+    }
+  },
+  "menu": {
+    "title": "Menú del Día",
+    "date": "Menú del",
+    "noMenu": "No hay menú disponible para hoy",
+    "noMenuSub": "Vuelve pronto o llámanos al (813) 930-5229",
+    "soldOut": "Agotado",
+    "featured": "Destacado",
+    "available": "Disponible"
+  },
+  "order": {
+    "title": "Ordenar en Línea",
+    "subtitle": "Recogida en 3909 W Broad St, Tampa",
+    "all": "Todo",
+    "addToCart": "Agregar al Carrito",
+    "soldOut": "Agotado",
+    "noProducts": "No hay productos en esta categoría",
+    "specialInstructions": "Instrucciones especiales (opcional)",
+    "qty": "Cantidad"
+  },
+  "cart": {
+    "title": "Tu Pedido",
+    "empty": "Tu carrito está vacío",
+    "emptySubtitle": "Explora nuestro menú y agrega artículos para comenzar tu pedido",
+    "subtotal": "Subtotal",
+    "checkout": "Proceder al Pago",
+    "continueShopping": "Seguir Comprando",
+    "remove": "Eliminar",
+    "item": "artículo",
+    "items": "artículos",
+    "each": "c/u"
+  },
+  "checkout": {
+    "title": "Pago",
+    "subtitle": "Recogida en nuestra ubicación de Tampa",
+    "pickupDetails": "Detalles de Recogida",
+    "yourName": "Tu Nombre",
+    "phone": "Número de Teléfono",
+    "pickupTime": "Hora de Recogida",
+    "selectTime": "Selecciona una hora...",
+    "apply": "Aplicar",
+    "paymentMethod": "Método de Pago",
+    "payAtPickup": "Pagar al Recoger (Efectivo / Tarjeta)",
+    "payByCard": "Pagar con Tarjeta Ahora (Square)",
+    "orderSummary": "Resumen del Pedido",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "placeOrder": "Realizar Pedido",
+    "processing": "Procesando...",
+    "orderConfirmed": "¡Pedido Confirmado!",
+    "orderMsg": "Tu pedido ha sido enviado. Lo tendremos listo a tu hora de recogida seleccionada.",
+    "orderNumber": "Pedido #",
+    "newOrder": "Realizar Otro Pedido",
+    "cardDetails": "Datos de la Tarjeta",
+    "backToOrder": "Volver al Pedido"
+  },
+  "desserts": {
+    "title": "Postres y Pavlovas",
+    "subtitle": "Nuestras creaciones dulces insignia — por encargo o disponibles a diario",
+    "customCta": "Solicitar Pedido Personalizado",
+    "cateringCta": "Catering de Postres"
+  },
+  "catering": {
+    "title": "Catering Profesional",
+    "subtitle": "Sabores venezolanos auténticos para tus eventos — desde cenas íntimas hasta grandes celebraciones",
+    "formTitle": "Solicitar Cotización de Catering",
+    "name": "Tu Nombre",
+    "email": "Correo Electrónico",
+    "phone": "Número de Teléfono",
+    "eventDate": "Fecha del Evento",
+    "eventType": "Tipo de Evento",
+    "guestCount": "Número Estimado de Invitados",
+    "details": "Detalles del Evento y Requerimientos del Menú",
+    "submit": "Enviar Solicitud",
+    "sending": "Enviando...",
+    "success": "¡Solicitud recibida! Te contactaremos en las próximas 24 horas.",
+    "eventTypes": {
+      "corporate": "Evento Corporativo",
+      "wedding": "Boda / Quinceañera",
+      "birthday": "Fiesta de Cumpleaños",
+      "social": "Reunión Social",
+      "holiday": "Fiesta de Temporada",
+      "other": "Otro"
+    }
+  },
+  "customOrders": {
+    "title": "Pedidos Personalizados",
+    "subtitle": "Tu postre soñado, hecho a tu medida. Pavlovas, tortas, bandejas de pasteles y más.",
+    "formTitle": "Envía Tu Solicitud",
+    "name": "Tu Nombre",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "dessertType": "Tipo de Postre",
+    "size": "Tamaño / Porciones",
+    "flavors": "Sabores y Preferencias",
+    "occasion": "Ocasión",
+    "neededBy": "Lo Necesito Para",
+    "imageUrl": "URL de Imagen de Inspiración (opcional)",
+    "notes": "Notas Adicionales",
+    "submit": "Enviar Solicitud",
+    "sending": "Enviando...",
+    "success": "¡Solicitud recibida! Te responderemos en 24 horas.",
+    "types": {
+      "pavlova": "Pavlova",
+      "cake": "Torta",
+      "pastry": "Bandeja de Pasteles",
+      "tres_leches": "Tres Leches",
+      "other": "Otro"
+    }
+  },
+  "about": {
+    "title": "Nuestra Historia",
+    "subtitle": "Raíces venezolanas, corazón de Tampa",
+    "section1Title": "Nacido del Amor",
+    "section1": "Pavlova Love Tampa fue fundado por una familia apasionada por compartir la rica herencia culinaria venezolana con la comunidad de Tampa Bay. Cada receta ha sido transmitida de generación en generación, adaptada con ingredientes locales y perfeccionada con cariño.",
+    "section2Title": "Hecho Cada Mañana",
+    "section2": "Nuestra cocina cobra vida a las 4am diariamente. Desde las conchas de merengue para nuestras pavlovas hasta la masa para nuestras arepas — todo se hace desde cero. No creemos en los atajos cuando se trata de sabor.",
+    "section3Title": "La Comunidad Primero",
+    "section3": "Somos más que una panadería — somos un punto de encuentro. Un pedazo de Venezuela en el corazón de Tampa, donde los vecinos se vuelven familia alrededor del café con leche y los pasteles frescos.",
+    "values": {
+      "fresh": "Hecho Fresco Diariamente",
+      "authentic": "Recetas Auténticas",
+      "family": "Familia Propietaria",
+      "community": "Comunidad Primero"
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "subtitle": "Nos encantaría saber de ti",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "hours": "Horario",
+    "social": "Síguenos",
+    "callNow": "Llamar Ahora",
+    "whatsapp": "WhatsApp",
+    "directions": "Cómo Llegar",
+    "messageTitle": "Envía un Mensaje",
+    "yourName": "Tu Nombre",
+    "email": "Correo",
+    "message": "Mensaje",
+    "send": "Enviar Mensaje",
+    "sending": "Enviando...",
+    "success": "¡Mensaje enviado! Te responderemos pronto.",
+    "hoursDetail": {
+      "weekday": "Lun – Vie: 7:00 am – 7:00 pm",
+      "saturday": "Sábado: 7:00 am – 7:00 pm",
+      "sunday": "Domingo: 8:00 am – 3:00 pm"
+    }
+  },
+  "reviews": {
+    "title": "Reseñas de Clientes",
+    "subtitle": "Lo que dice nuestra comunidad sobre nosotros",
+    "noReviews": "Aún no hay reseñas — ¡sé el primero!",
+    "from": "vía"
+  },
+  "gallery": {
+    "title": "Galería",
+    "subtitle": "Un vistazo a nuestra cocina y creaciones",
+    "all": "Todo",
+    "close": "Cerrar",
+    "noImages": "Sin imágenes aún"
+  },
+  "footer": {
+    "tagline": "Sabores venezolanos auténticos, hechos con amor en Tampa, FL.",
+    "quickLinks": "Enlaces Rápidos",
+    "hours": "Horario",
+    "rights": "Todos los derechos reservados."
+  },
+  "admin": {
+    "login": {
+      "title": "Acceso Admin",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "error": "Credenciales inválidas"
+    },
+    "nav": {
+      "dashboard": "Panel",
+      "orders": "Pedidos",
+      "products": "Productos",
+      "menu": "Menú Diario",
+      "catering": "Catering",
+      "customOrders": "Pedidos Custom",
+      "reviews": "Reseñas",
+      "gallery": "Galería",
+      "settings": "Configuración",
+      "logout": "Cerrar Sesión"
+    },
+    "common": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Agregar",
+      "create": "Crear",
+      "update": "Actualizar",
+      "loading": "Cargando...",
+      "noData": "Sin datos",
+      "confirm": "¿Estás seguro?",
+      "yes": "Sí, eliminar",
+      "search": "Buscar..."
+    }
+  },
+  "errors": {
+    "required": "Este campo es requerido",
+    "invalidEmail": "Correo inválido",
+    "invalidPhone": "Teléfono inválido",
+    "minLength": "Muy corto",
+    "generic": "Algo salió mal. Por favor intenta de nuevo."
+  }
+}

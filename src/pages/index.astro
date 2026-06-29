@@ -1,0 +1,325 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang } from '@/i18n/utils';
+import { COL, queryEq } from '@/server/store';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const es = lang === 'es';
+
+const categories = [
+  { title: es ? 'Postres' : 'Desserts', image: '/images/signature-cake.png', sub1: es ? 'Momentos dulces' : 'Sweet moments', sub2: es ? 'para compartir' : 'made to share', cta: es ? 'Ver Postres' : 'View Desserts', href: '/desserts' },
+  { title: es ? 'Menú del Día' : 'Daily Menu', image: '/images/latin_food_plate.png', sub1: es ? 'Sabores latinos frescos' : 'Fresh Latin flavors', sub2: es ? 'todos los días' : 'every single day', cta: es ? 'Ver Menú' : 'View Menu', href: '/menu' },
+  { title: es ? 'Café y Pastelería' : 'Coffee & Pastries', image: '/images/coffee_pastries.png', sub1: es ? 'Tu pausa de café' : 'Your perfect', sub2: es ? 'perfecta' : 'coffee break', cta: es ? 'Ver Café' : 'View Coffee', href: '/menu' },
+  { title: es ? 'Catering' : 'Catering', image: '/images/catering.png', sub1: es ? 'Eventos hechos' : 'Events made', sub2: es ? 'deliciosos' : 'delicious', cta: es ? 'Ver Catering' : 'View Catering', href: '/catering' },
+];
+
+const fmtPrice = (cents: number) => `$${(Number(cents) / 100).toFixed(2)}`;
+
+// Signature desserts = featured products (managed in the admin panel).
+let signatureDesserts = [];
+try {
+  const featured = (await queryEq(COL.products, 'featured', true, { orderBy: 'sortOrder', dir: 'asc' })).slice(0, 6);
+  signatureDesserts = featured.map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    nameEs: p.nameEs || p.name,
+    price: fmtPrice(p.price),
+    priceCents: Number(p.price),
+    image: p.imageUrl || '/images/signature-cake.png',
+  }));
+} catch (_) {}
+
+// Testimonials = featured reviews (managed in the admin panel).
+let testimonials = [];
+try {
+  const reviews = await queryEq(COL.reviews, 'featured', true, { orderBy: 'sortOrder', dir: 'asc' });
+  testimonials = reviews.slice(0, 3).map((r: any) => ({
+    text: es ? (r.textEs || r.text) : r.text,
+    author: r.author,
+  }));
+} catch (_) {}
+---
+
+<MainLayout title="Pavlova Love Tampa">
+  
+  <!-- HERO -->
+  <section class="relative overflow-hidden min-h-[88vh] md:min-h-[86vh] -mt-[4.75rem] pt-[4.75rem] flex items-center bg-[#fbeee4]">
+    <!-- Full-bleed background image -->
+    <div class="absolute inset-0">
+      <img src="/images/hero-pavlova.png" alt="Handcrafted pavlova topped with fresh berries" class="w-full h-full object-cover object-[18%_center] scale-[1.0] reveal reveal-2" />
+    </div>
+    <!-- Cream gradient: keeps left text crisp, blends into photo on the right -->
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,#fbeee4_0%,#fbeee4_44%,rgba(251,238,228,0.82)_58%,rgba(251,238,228,0.28)_74%,transparent_90%)]"></div>
+    <!-- Mobile readability scrim (removed on md+) -->
+    <div class="absolute inset-0 bg-[#fbeee4]/45 md:hidden"></div>
+    <!-- Soft top fade + bottom fade that dissolves into the next (white) section -->
+    <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#fffbf7]/70 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#fbeee4]/60 to-[var(--color-base-100)]"></div>
+
+    <div class="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-24">
+      <div class="reveal reveal-1 max-w-xl mx-auto sm:mx-0 text-center sm:text-left">
+        <p class="eyebrow text-[var(--cta)] text-[0.62rem] sm:text-[0.7rem] tracking-[0.32em] font-bold mb-5">
+          {es ? 'Pastelería Venezolana, Café y Cocina Latina' : 'Venezuelan Bakery, Café & Latin Kitchen'}
+        </p>
+        <h1 class="font-serif text-5xl md:text-6xl lg:text-[4.75rem] leading-[1.02] text-base-content mb-1 tracking-tight">
+          {es ? 'Hecho con amor.' : 'Made with love.'}
+        </h1>
+        <div class="text-script text-5xl md:text-6xl lg:text-[4.75rem] leading-[1.08] mb-6">
+          {es ? 'Servido con pasión.' : 'Served with passion.'}
+        </div>
+        <p class="text-base-content/80 leading-relaxed mb-9 max-w-sm mx-auto sm:mx-0 text-sm lg:text-base">
+          {es ? 'Postres artesanales, menú fresco diario y auténticos sabores latinos en Tampa.' : 'Handmade desserts, fresh daily menu, and authentic Latin flavors in Tampa.'}
+        </p>
+
+        <div class="flex flex-col items-center sm:items-start sm:flex-row sm:items-center gap-4">
+          <a href="/menu" class="btn btn-cta rounded-full px-7 py-3 h-auto text-[0.75rem] tracking-widest gap-2 w-max shadow-lg shadow-[var(--cta)]/25">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            {es ? 'ORDENAR' : 'ORDER PICKUP'}
+          </a>
+          <a href="/menu" class="rounded-full border border-base-content/25 bg-base-100/40 backdrop-blur-sm text-base-content text-[0.75rem] font-bold tracking-widest px-7 py-3 h-auto w-max inline-flex items-center gap-2 hover:border-[var(--cta)] hover:text-[var(--cta)] transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+            {es ? 'MENÚ DE HOY' : "TODAY'S MENU"}
+          </a>
+        </div>
+
+        <div class="flex flex-wrap justify-center sm:justify-start items-start gap-x-7 gap-y-5 mt-12">
+          <div class="flex items-center gap-2.5">
+            <svg class="text-[var(--cta)] shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span class="text-[0.72rem] leading-tight text-base-content/75 font-medium">{es ? 'Recogida en' : 'Pickup in'}<br/>30–40 min</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="shrink-0 w-5 h-5 bg-[var(--cta)]" style="-webkit-mask:url('/images/icon-fresh.png') center/contain no-repeat; mask:url('/images/icon-fresh.png') center/contain no-repeat;" aria-hidden="true"></span>
+            <span class="text-[0.72rem] leading-tight text-base-content/75 font-medium">{es ? 'Hecho Fresco' : 'Made Fresh'}<br/>{es ? 'Cada Día' : 'Every Day'}</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="shrink-0 w-5 h-5 bg-[var(--cta)]" style="-webkit-mask:url('/images/icon-catering.png') center/contain no-repeat; mask:url('/images/icon-catering.png') center/contain no-repeat;" aria-hidden="true"></span>
+            <span class="text-[0.72rem] leading-tight text-base-content/75 font-medium">{es ? 'Catering y' : 'Catering &'}<br/>{es ? 'Eventos' : 'Events'}</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="shrink-0 w-5 h-5 bg-[var(--cta)]" style="-webkit-mask:url('/images/icon-custom.png') center/contain no-repeat; mask:url('/images/icon-custom.png') center/contain no-repeat;" aria-hidden="true"></span>
+            <span class="text-[0.72rem] leading-tight text-base-content/75 font-medium">{es ? 'Postres' : 'Custom'}<br/>{es ? 'Personalizados' : 'Desserts'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY GRID -->
+  <section class="bg-base-100 pt-20 lg:pt-28 pb-20 lg:pb-28">
+    <div class="container-lux">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-7" data-reveal>
+        {categories.map((cat) => (
+          <a href={cat.href} class="group block">
+            <div class="overflow-hidden rounded-[var(--radius-box)] shadow-[var(--shadow-soft)]">
+              <img src={cat.image} alt={cat.title} class="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+            <div class="relative -mt-9 mx-4 bg-base-100 rounded-[var(--radius-box)] shadow-[var(--shadow-soft)] border border-[var(--hairline)] px-5 py-6 text-center">
+              <h3 class="font-serif text-lg lg:text-xl uppercase tracking-wide text-base-content mb-2">{cat.title}</h3>
+              <p class="text-[0.78rem] text-base-content/55 leading-snug mb-4">{cat.sub1}<br/>{cat.sub2}</p>
+              <span class="text-[0.62rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)] inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                {cat.cta} <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EVERY DAY SOMETHING DELICIOUS AWAITS -->
+  <section class="bg-base-100">
+    <div class="grid md:grid-cols-2 items-stretch">
+      <!-- Image: full-bleed on the left -->
+      <div class="reveal reveal-left relative min-h-[300px] md:min-h-[560px] overflow-hidden">
+        <img src="/images/latin_food_plate.png" alt="A freshly plated daily Latin dish" class="absolute inset-0 w-full h-full object-cover" />
+      </div>
+
+      <!-- Content: right panel -->
+      <div class="reveal reveal-right relative flex items-center">
+        <div class="relative w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-24">
+          <!-- Made Fresh Daily seal -->
+          <div class="absolute top-8 right-6 sm:right-10 lg:top-12 lg:right-16 xl:right-24 w-24 h-24 rounded-full border border-[var(--cta)] flex flex-col items-center justify-center text-[var(--cta)] text-[0.55rem] tracking-[0.2em] font-bold uppercase bg-base-100/60 backdrop-blur-sm shadow-sm rotate-12">
+            <span>{es ? 'Hecho' : 'Made'}</span>
+            <span class="text-script text-xl my-0.5 transform -rotate-12">{es ? 'Fresco' : 'Fresh'}</span>
+            <span>{es ? 'Diario' : 'Daily'}</span>
+          </div>
+
+          <div class="max-w-md mx-auto md:mx-0 text-center md:text-left">
+            <h2 class="display-lg text-base-content mb-6 leading-[1.1]">{es ? 'CADA DÍA' : 'EVERY DAY'}<br/>{es ? 'TE ESPERA ALGO' : 'SOMETHING'}<br/>{es ? 'DELICIOSO' : 'DELICIOUS AWAITS'}</h2>
+            <div class="flex items-center justify-center md:justify-start gap-3 mb-6">
+              <span class="h-px w-12 bg-[var(--cta)]/50"></span>
+              <span class="text-[var(--cta)] text-xs">✦</span>
+              <span class="h-px w-12 bg-[var(--cta)]/50"></span>
+            </div>
+            <p class="text-base-content/70 max-w-sm mx-auto md:mx-0 mb-8 leading-relaxed">
+              {es ? 'Nuestra cocina crea un nuevo menú cada día con los ingredientes más frescos.' : 'Our kitchen creates a new menu every single day using the freshest ingredients.'}
+            </p>
+            <a href="/menu" class="text-[0.7rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)] hover:text-base-content transition-colors inline-flex items-center gap-2">
+              {es ? 'VER MENÚ' : 'VIEW MENU'} <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR SIGNATURE DESSERTS -->
+  <section class="bg-base-100 py-20 lg:py-28">
+    <div class="container-lux">
+      <div class="reveal flex items-center gap-5 mb-14 justify-center">
+        <hr class="hairline flex-1" />
+        <span class="eyebrow text-base-content/60 tracking-[0.3em] inline-flex items-center gap-2 whitespace-nowrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cta)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+          {es ? 'NUESTROS POSTRES INSIGNIA' : 'OUR SIGNATURE DESSERTS'}
+        </span>
+        <hr class="hairline flex-1" />
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-7 mb-14" data-reveal>
+        {signatureDesserts.map((dessert) => (
+          <div class="group">
+            <div class="overflow-hidden rounded-2xl shadow-[var(--shadow-soft)] mb-4 bg-base-200">
+              <img src={dessert.image} alt={es ? dessert.nameEs : dessert.name} class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+            <h3 class="font-serif text-[0.95rem] font-semibold leading-tight text-base-content mb-0.5">{es ? dessert.nameEs : dessert.name}</h3>
+            <p class="text-[0.8rem] text-base-content/60 mb-3">{dessert.price}</p>
+            <button
+              type="button"
+              data-add-to-cart
+              data-id={dessert.id}
+              data-name={dessert.name}
+              data-name-es={dessert.nameEs}
+              data-price={dessert.priceCents}
+              data-image={dessert.image}
+              class="block mx-auto w-max py-2 px-8 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.62rem] tracking-[0.18em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all"
+            >
+              {es ? '+ AGREGAR' : '+ ADD'}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div class="reveal text-center">
+        <a href="/menu?category=desserts" class="inline-block py-3.5 px-10 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.7rem] tracking-[0.2em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all">
+          {es ? 'VER TODOS LOS POSTRES' : 'VIEW ALL DESSERTS'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPLIT: CATERING & CUSTOM -->
+  <section class="relative grid lg:grid-cols-2">
+    <!-- Soft fades blending the colored block into the white sections above & below -->
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-16 lg:h-24 z-20 bg-gradient-to-b from-[var(--color-base-100)] to-transparent"></div>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-16 lg:h-24 z-20 bg-gradient-to-t from-[var(--color-base-100)] to-transparent"></div>
+    <!-- Catering -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 bg-base-200">
+      <div class="relative min-h-[340px] sm:min-h-[480px] lg:min-h-[560px] overflow-hidden">
+        <img src="/images/catering_event.png" alt="Catering spread" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="absolute inset-0 hidden sm:block bg-[linear-gradient(to_right,transparent_45%,var(--color-base-200)_100%)]"></div>
+      </div>
+      <div class="reveal reveal-right flex flex-col justify-center p-12 lg:p-20 text-center sm:text-left">
+        <h2 class="font-serif text-4xl lg:text-5xl leading-[1.1] mb-5 text-base-content">{es ? 'CATERING' : 'CATERING'}<br/>{es ? 'HECHO' : 'MADE'}<br/>{es ? 'HERMOSO' : 'BEAUTIFUL'}</h2>
+        <p class="text-sm text-base-content/70 leading-relaxed mb-8">
+          {es ? 'Desde reuniones íntimas hasta celebraciones inolvidables, lo haremos extraordinario.' : "From intimate gatherings to unforgettable celebrations, we'll make it extraordinary."}
+        </p>
+        <a href="/catering" class="inline-block w-max mx-auto sm:mx-0 py-2.5 px-8 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.6rem] tracking-[0.2em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all">
+          {es ? 'SOLICITAR CATERING →' : 'REQUEST CATERING →'}
+        </a>
+      </div>
+    </div>
+    <!-- Custom -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 bg-[var(--blush-soft)]">
+      <div class="reveal reveal-left flex flex-col justify-center p-12 lg:p-20 text-center sm:text-left order-2 sm:order-1">
+        <h2 class="font-serif text-4xl lg:text-5xl leading-[1.1] mb-5 text-base-content">{es ? 'POSTRES' : 'CUSTOM'}<br/>{es ? 'PERSONALIZADOS' : 'DESSERTS'}<br/>{es ? 'SOLO PARA TI' : 'JUST FOR YOU'}</h2>
+        <p class="text-sm text-base-content/70 leading-relaxed mb-8">
+          {es ? 'Celebra los momentos más dulces de la vida con algo único.' : "Celebrate life's sweetest moments with something unique."}
+        </p>
+        <a href="/custom-orders" class="inline-block w-max mx-auto sm:mx-0 py-2.5 px-8 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.6rem] tracking-[0.2em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all">
+          {es ? 'INICIAR TU PEDIDO →' : 'START YOUR ORDER →'}
+        </a>
+      </div>
+      <div class="relative min-h-[340px] sm:min-h-[480px] lg:min-h-[560px] order-1 sm:order-2 overflow-hidden">
+        <img src="/images/custom_cake.png" alt="Custom celebration cake" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="absolute inset-0 hidden sm:block bg-[linear-gradient(to_left,transparent_45%,var(--blush-soft)_100%)]"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOVED BY OUR COMMUNITY -->
+  <section class="bg-base-100 py-16 lg:py-24">
+    <div class="container-lux">
+      <!-- Testimonials -->
+      <div class="reveal flex items-center gap-4 mb-12 justify-center">
+        <hr class="hairline flex-1 max-w-[100px]" />
+        <span class="eyebrow text-base-content/60 tracking-[0.3em]">{es ? 'AMADO POR NUESTRA COMUNIDAD' : 'LOVED BY OUR COMMUNITY'}</span>
+        <hr class="hairline flex-1 max-w-[100px]" />
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-10 relative" data-reveal>
+        <button class="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        {testimonials.map((t) => (
+          <div class="bg-[var(--blush-soft)]/50 p-8 lg:p-9 flex flex-col h-full text-center sm:text-left items-center sm:items-start">
+            <div class="flex text-[var(--cta)] mb-5 gap-1">
+              {Array.from({length:5}).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ))}
+            </div>
+            <p class="text-[0.9rem] leading-relaxed text-base-content/70 mb-7">"{t.text}"</p>
+            <p class="mt-auto text-[0.9rem] font-semibold text-base-content/85">— {t.author}</p>
+          </div>
+        ))}
+        <button class="hidden md:block absolute -right-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- READY TO ORDER -->
+  <section class="bg-base-100 py-12 lg:py-16">
+    <div class="container-lux flex flex-col md:flex-row items-stretch gap-10 md:gap-0">
+      <div class="reveal flex-1 text-center flex flex-col items-center justify-center gap-5 md:px-8">
+        <div>
+          <h2 class="font-serif text-2xl font-bold mb-1.5 text-base-content">{es ? '¿LISTO PARA ORDENAR?' : 'READY TO ORDER?'}</h2>
+          <p class="text-[0.8rem] text-base-content/60">{es ? 'La recogida es rápida, fácil y siempre fresca.' : 'Pickup is fast, easy and always fresh.'}</p>
+        </div>
+        <a href="/menu" class="btn btn-cta rounded-full text-[0.7rem] tracking-[0.2em] h-11 px-8 inline-flex items-center gap-2 shadow-lg shadow-[var(--cta)]/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          {es ? 'ORDENAR' : 'ORDER PICKUP'}
+        </a>
+      </div>
+      <div class="hidden md:block self-stretch w-px bg-[var(--hairline)]"></div>
+      <div class="reveal reveal-2 flex-1 flex flex-col items-center justify-center gap-3 md:px-8">
+        <p class="font-serif italic text-sm text-base-content/70 whitespace-nowrap">{es ? '¿Prefieres Entrega?' : 'Prefer Delivery?'}</p>
+        <div class="flex items-center gap-6 lg:gap-8 rounded-2xl border border-[var(--hairline)] bg-transparent px-8 py-4">
+          <span class="text-[0.95rem] font-extrabold tracking-tight"><span class="text-black">Uber</span><span class="text-[#06C167]"> Eats</span></span>
+          <span class="text-[0.95rem] font-extrabold tracking-tight text-[#FF3008]">DoorDash</span>
+          <span class="text-[0.95rem] font-extrabold tracking-tight text-[#F63440]">GRUBHUB</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { addToCart } from '@/stores/cart';
+    import { openCart } from '@/stores/ui';
+
+    document.querySelectorAll('[data-add-to-cart]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        addToCart({
+          productId: Number(el.dataset.id),
+          name: el.dataset.name ?? '',
+          nameEs: el.dataset.nameEs ?? el.dataset.name ?? '',
+          price: Number(el.dataset.price),
+          imageUrl: el.dataset.image,
+          quantity: 1,
+        });
+        openCart();
+      });
+    });
+  </script>
+
+</MainLayout>
