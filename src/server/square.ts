@@ -9,26 +9,48 @@
  */
 import { SquareClient, SquareEnvironment } from "square";
 
-export const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID ?? "";
-export const SQUARE_APPLICATION_ID = process.env.SQUARE_APPLICATION_ID ?? "";
-export const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT ?? "sandbox";
+/** Read env at request time — bracket access avoids Vite inlining empty values at build on Vercel. */
+function env(key: string, fallback = ""): string {
+  return process.env[key] ?? fallback;
+}
+
+export function getSquarePublicConfig() {
+  const applicationId = env("SQUARE_APPLICATION_ID");
+  const locationId = env("SQUARE_LOCATION_ID");
+  const environment = env("SQUARE_ENVIRONMENT", "sandbox");
+  return {
+    applicationId,
+    locationId,
+    environment,
+    configured: Boolean(applicationId && locationId),
+  };
+}
+
+export function getSquareLocationId(): string {
+  return env("SQUARE_LOCATION_ID");
+}
 
 export function isSquareConfigured(): boolean {
-  return Boolean(process.env.SQUARE_ACCESS_TOKEN && SQUARE_APPLICATION_ID && SQUARE_LOCATION_ID);
+  return Boolean(
+    env("SQUARE_ACCESS_TOKEN") && env("SQUARE_APPLICATION_ID") && env("SQUARE_LOCATION_ID")
+  );
 }
 
 let cached: SquareClient | null | undefined;
 
 export function getSquareClient(): SquareClient | null {
   if (cached !== undefined) return cached;
-  if (!process.env.SQUARE_ACCESS_TOKEN) {
+  const token = env("SQUARE_ACCESS_TOKEN");
+  if (!token) {
     cached = null;
     return cached;
   }
   cached = new SquareClient({
-    token: process.env.SQUARE_ACCESS_TOKEN,
+    token,
     environment:
-      SQUARE_ENVIRONMENT === "production" ? SquareEnvironment.Production : SquareEnvironment.Sandbox,
+      env("SQUARE_ENVIRONMENT", "sandbox") === "production"
+        ? SquareEnvironment.Production
+        : SquareEnvironment.Sandbox,
   });
   return cached;
 }

@@ -5,11 +5,41 @@ import type { Lang } from '@/stores/language';
 
 interface Props {
   lang: Lang;
-  squareAppId: string;
-  squareLocationId: string;
+}
+
+interface SquareConfig {
+  applicationId: string;
+  locationId: string;
+  environment: string;
+  configured: boolean;
 }
 
 declare const Square: any;
+
+const SQUARE_SDK = {
+  sandbox: 'https://sandbox.web.squarecdn.com/v1/square.js',
+  production: 'https://web.squarecdn.com/v1/square.js',
+} as const;
+
+function loadSquareSdk(environment: string): Promise<void> {
+  if (typeof Square !== 'undefined') return Promise.resolve();
+  const src = environment === 'production' ? SQUARE_SDK.production : SQUARE_SDK.sandbox;
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) {
+    return new Promise((resolve) => {
+      if (typeof Square !== 'undefined') resolve();
+      else existing.addEventListener('load', () => resolve());
+    });
+  }
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Square SDK'));
+    document.head.appendChild(script);
+  });
+}
 
 const pickupTimes = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM'];
 
@@ -18,7 +48,7 @@ const lbl = {
   es: { title: 'Pago', subtitle: 'Recogida en nuestra ubicación de Tampa', address: '3909 W Broad St, Tampa, FL 33614', details: 'Detalles de Recogida', name: 'Tu Nombre', namePh: 'María García', phone: 'Teléfono', phonePh: '(813) 555-0100', time: 'Hora de Recogida', asap: 'Lo antes posible (20–30 min)', payment: 'Método de Pago', cash: 'Pagar al Recoger (Efectivo / Tarjeta)', card: 'Pagar con Tarjeta Ahora', selected: 'Seleccionado', comingSoon: 'Métodos de pago en línea adicionales próximamente.', preferDelivery: '¿Prefieres Entrega?', deliverySub: 'Ordena a través de nuestros socios de entrega.', summary: 'Resumen del Pedido', item: 'Artículo', items: 'Artículos', qty: 'Cant.', subtotal: 'Subtotal', pickupFee: 'Tarifa de Recogida', free: 'Gratis', total: 'Total', place: 'Realizar Pedido', processing: 'Procesando...', agreePre: 'Al realizar tu pedido, aceptas nuestros', termsOfService: 'Términos de Servicio', and: 'y', privacyPolicy: 'Política de Privacidad', confirmed: '¡Pedido Confirmado!', confirmedMsg: 'Tu pedido ha sido enviado. Lo tendremos listo a tu hora de recogida.', orderNum: 'Pedido #', newOrder: 'Realizar Otro Pedido', emptyCart: 'Tu carrito está vacío', emptyLink: 'Volver al menú', backToOrder: 'Volver al Pedido', cardDetails: 'Datos de la Tarjeta' },
 };
 
-export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Props) {
+export default function CheckoutForm({ lang }: Props) {
   const t = lbl[lang] || lbl.en;
   const items = useStore(cartItems);
   const total = useStore(cartTotal);
@@ -30,19 +60,45 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
   const [processing, setProcessing] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState<number|null>(null);
   const [errors, setErrors] = useState<Record<string,string>>({});
+  const [squareConfig, setSquareConfig] = useState<SquareConfig | null>(null);
+  const [squareSdkReady, setSquareSdkReady] = useState(false);
 
   const cardRef = useRef<any>(null);
   const squareRef = useRef<any>(null);
 
+  // Load Square config at runtime from the server (reads Vercel env vars on each request).
   useEffect(() => {
-    if (payMethod !== 'card' || !squareAppId || typeof Square === 'undefined') return;
+    let cancelled = false;
+    fetch('/api/square/payments/config')
+      .then((r) => r.json())
+      .then((cfg: SquareConfig) => {
+        if (!cancelled) setSquareConfig(cfg);
+      })
+      .catch(() => {
+        if (!cancelled) setSquareConfig({ applicationId: '', locationId: '', environment: 'sandbox', configured: false });
+      });
+    return () => { cancelled = true; };
+  }, []);
 
+  useEffect(() => {
+    if (!squareConfig?.configured) return;
+    let cancelled = false;
+    loadSquareSdk(squareConfig.environment)
+      .then(() => { if (!cancelled) setSquareSdkReady(true); })
+      .catch((e) => console.error('Square SDK load failed', e));
+    return () => { cancelled = true; };
+  }, [squareConfig?.configured, squareConfig?.environment]);
+
+  useEffect(() => {
+    if (payMethod !== 'card' || !squareConfig?.configured || !squareSdkReady) return;
+
+    const { applicationId, locationId } = squareConfig;
     let cancelled = false;
     let localCard: any = null;
 
     const initSquare = async () => {
       try {
-        const payments = Square.payments(squareAppId, squareLocationId);
+        const payments = Square.payments(applicationId, locationId);
         // NOTE: Square's Web Payments SDK only accepts standard color formats
         // (hex / rgb / named). oklch() throws "Invalid style value", which would
         // reject card() and leave the field blank — keep this a hex value.
@@ -71,7 +127,7 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
       try { (localCard ?? cardRef.current)?.destroy?.(); } catch {}
       cardRef.current = null;
     };
-  }, [payMethod, squareAppId]);
+  }, [payMethod, squareConfig, squareSdkReady]);
 
   const fmtPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
   const finalTotal = total;
@@ -254,7 +310,7 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
                 <span className="flex-1 font-semibold text-sm text-base-content">{t.cash}</span>
                 {payMethod === 'cash' && <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)]">{t.selected}</span>}
               </label>
-              {squareAppId && (
+              {squareConfig?.configured && (
                 <label className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 cursor-pointer transition-colors ${payMethod === 'card' ? 'border-[var(--cta)] bg-[var(--cta)]/[0.04]' : 'border-[var(--hairline)] hover:border-[var(--cta)]/40'}`}>
                   <input type="radio" className="h-4 w-4 accent-[var(--cta)]" checked={payMethod === 'card'} onChange={() => setPayMethod('card')} />
                   <span className="text-base leading-none">💳</span>
@@ -269,9 +325,9 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
                 <p className="text-sm font-medium mb-3">{t.cardDetails}</p>
                 <div id="square-card-container" className="min-h-[80px] rounded-xl border border-[var(--hairline)] p-3"></div>
               </div>
-            ) : (
+            ) : squareConfig && !squareConfig.configured ? (
               <p className="text-xs text-base-content/45 italic mt-4">{t.comingSoon}</p>
-            )}
+            ) : null}
 
             <hr className="border-0 border-t border-[var(--hairline)] my-9" />
 

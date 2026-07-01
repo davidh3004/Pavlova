@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { randomUUID } from "node:crypto";
 import { COL, update } from "@/server/store";
 import { json, error, readBody, run } from "@/server/http";
-import { getSquareClient, SQUARE_LOCATION_ID, decimalToSquareMoney } from "@/server/square";
+import { getSquareClient, getSquareLocationId, decimalToSquareMoney } from "@/server/square";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -19,7 +19,7 @@ export const POST: APIRoute = ({ request }) =>
         sourceId,
         idempotencyKey: randomUUID(),
         amountMoney: { amount: BigInt(amountMoney), currency },
-        locationId: SQUARE_LOCATION_ID,
+        locationId: getSquareLocationId(),
         note: note ?? `Pavlova Love Order${orderId ? ` #${orderId}` : ""}`,
         buyerEmailAddress: customerEmail,
         ...(customerName
