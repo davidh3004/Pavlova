@@ -1,0 +1,17 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang } from '@/i18n/utils';
+import DailyMenu from '@/components/menu/DailyMenu';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const es = lang === 'es';
+---
+
+<MainLayout
+  title={es ? 'Menú del Día' : "Today's Menu"}
+  description={es
+    ? 'El menú fresco de hoy en Pavlova Love Tampa — hecho fresco esta mañana.'
+    : "Today's fresh menu at Pavlova Love Tampa — made fresh this morning."}
+>
+  <DailyMenu lang={lang} client:load />
+</MainLayout>

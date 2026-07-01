@@ -87,7 +87,7 @@ export default function CustomOrderBuilder({ lang }: { lang: Lang }) {
       `• ${es ? 'Hora' : 'Time'}: ${time}`,
       total !== null ? `• ${es ? 'Total estimado' : 'Estimated total'}: ${fmt(total)}` : `• ${es ? 'Precio: a consultar' : 'Pricing: to be confirmed'}`,
     ].filter(Boolean);
-    window.open(`https://wa.me/18139305229?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
+    window.open(`https://wa.me/14074197137?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
   };
 
   const stepLabel = 'text-[0.6rem] font-bold tracking-[0.22em] uppercase text-[var(--cta)]';

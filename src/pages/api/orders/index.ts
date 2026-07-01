@@ -1,16 +1,14 @@
 import type { APIRoute } from "astro";
-import { COL, listAll, create } from "@/server/store";
+import { COL, create } from "@/server/store";
 import { json, error, readBody, run } from "@/server/http";
-import { mapOrder, generateOrderNumber } from "@/server/orders";
+import { generateOrderNumber, getOrdersWithItems, getOrderWithItems } from "@/server/orders";
 
 export const GET: APIRoute = ({ url }) =>
   run(async () => {
-    let orders = await listAll(COL.orders, { orderBy: "createdAt", dir: "desc" });
-    const status = url.searchParams.get("status");
-    if (status) orders = orders.filter((o) => o.status === status);
-    const limit = url.searchParams.get("limit");
-    if (limit) orders = orders.slice(0, Number(limit));
-    return json(orders.map(mapOrder));
+    const status = url.searchParams.get("status") ?? undefined;
+    const limitParam = url.searchParams.get("limit");
+    const limit = limitParam ? Number(limitParam) : undefined;
+    return json(await getOrdersWithItems({ status, limit }));
   });
 
 export const POST: APIRoute = ({ request }) =>
@@ -23,7 +21,8 @@ export const POST: APIRoute = ({ request }) =>
       (sum, item) => sum + parseFloat(String(item.price)) * Number(item.quantity || 0),
       0
     );
-    const total = subtotal;
+    const discount = Number(body.discount) || 0;
+    const total = Math.max(0, subtotal - discount);
 
     const order = await create(COL.orders, {
       orderNumber: generateOrderNumber(),
@@ -33,8 +32,10 @@ export const POST: APIRoute = ({ request }) =>
       pickupTime: body.pickupTime ?? null,
       status: "pending",
       subtotal: subtotal.toFixed(2),
+      discount: discount.toFixed(2),
       total: total.toFixed(2),
       paymentMethod: body.paymentMethod ?? null,
+      promoCode: body.promoCode ?? null,
       specialInstructions: body.specialInstructions ?? null,
     });
 
@@ -50,5 +51,5 @@ export const POST: APIRoute = ({ request }) =>
       });
     }
 
-    return json(mapOrder(order), 201);
+    return json(await getOrderWithItems(order.id), 201);
   });

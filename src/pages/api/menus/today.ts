@@ -7,6 +7,8 @@ export const GET: APIRoute = () =>
   run(async () => {
     const today = new Date().toISOString().slice(0, 10);
     const menus = await queryEq(COL.menus, "date", today, { orderBy: "createdAt", dir: "desc" });
-    if (menus.length === 0) return json(null);
-    return json(await getMenuWithItems(menus[0].id));
+    // Only surface a menu that has been published from the admin panel.
+    const published = menus.find((m) => m.published);
+    if (!published) return json(null);
+    return json(await getMenuWithItems(published.id));
   });

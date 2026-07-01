@@ -1,0 +1,17 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { detectLang } from '@/i18n/utils';
+import OrderPage from '@/components/order/OrderPage';
+
+const lang = detectLang(Astro.request.headers.get('cookie'));
+const es = lang === 'es';
+---
+
+<MainLayout
+  title={es ? 'Ordenar en Línea' : 'Order Online'}
+  description={es
+    ? 'Ordena en línea para recoger en Pavlova Love Tampa. Pavlovas, postres, almuerzos y más.'
+    : 'Order online for pickup at Pavlova Love Tampa. Pavlovas, desserts, lunch and more.'}
+>
+  <OrderPage lang={lang} client:load />
+</MainLayout>

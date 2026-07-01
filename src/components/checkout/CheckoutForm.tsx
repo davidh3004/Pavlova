@@ -37,13 +37,27 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
   useEffect(() => {
     if (payMethod !== 'card' || !squareAppId || typeof Square === 'undefined') return;
 
+    let cancelled = false;
+    let localCard: any = null;
+
     const initSquare = async () => {
       try {
         const payments = Square.payments(squareAppId, squareLocationId);
+        // NOTE: Square's Web Payments SDK only accepts standard color formats
+        // (hex / rgb / named). oklch() throws "Invalid style value", which would
+        // reject card() and leave the field blank — keep this a hex value.
         const card = await payments.card({
-          style: { '.input-container': { borderRadius: '8px' }, '.input-container.is-focus': { borderColor: 'oklch(60% 0.13 12)' } },
+          style: { '.input-container': { borderRadius: '8px' }, '.input-container.is-focus': { borderColor: '#c0445f' } },
         });
+        // The effect was torn down while card() was resolving — discard this instance.
+        if (cancelled) { card.destroy?.(); return; }
+        // Remove any iframe orphaned by a previous (cancelled/double-invoked) init
+        // so we never attach a second card into the same container.
+        const container = document.getElementById('square-card-container');
+        if (container) container.innerHTML = '';
         await card.attach('#square-card-container');
+        if (cancelled) { card.destroy?.(); return; }
+        localCard = card;
         cardRef.current = card;
         squareRef.current = payments;
       } catch (e) {
@@ -51,7 +65,12 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
       }
     };
     initSquare();
-    return () => { cardRef.current?.destroy?.(); cardRef.current = null; };
+
+    return () => {
+      cancelled = true;
+      try { (localCard ?? cardRef.current)?.destroy?.(); } catch {}
+      cardRef.current = null;
+    };
   }, [payMethod, squareAppId]);
 
   const fmtPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
@@ -95,8 +114,20 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
 
       // If card payment, tokenize + charge
       if (payMethod === 'card' && cardRef.current) {
-        const tokenResult = await cardRef.current.tokenize();
-        if (tokenResult.status !== 'OK') throw new Error('Card tokenization failed');
+        let tokenResult: any;
+        try {
+          tokenResult = await cardRef.current.tokenize();
+        } catch {
+          // Square's request to its PCI endpoint never resolved — almost always
+          // an ad-blocker / privacy extension blocking pci-connect.squareup(sandbox).com.
+          throw new Error(lang === 'es'
+            ? 'No se pudo procesar la tarjeta. Desactiva tu bloqueador de anuncios para este sitio e inténtalo de nuevo.'
+            : 'Could not reach the card processor. Disable your ad/privacy blocker for this site and try again.');
+        }
+        if (tokenResult.status !== 'OK') {
+          const detail = tokenResult.errors?.[0]?.message;
+          throw new Error(detail || (lang === 'es' ? 'No se pudo validar la tarjeta.' : 'Card could not be validated.'));
+        }
 
         // API expects dollars (decimalToSquareMoney × 100); finalTotal is cents → divide
         const payRes = await fetch('/api/square/payments/create', {
@@ -109,7 +140,11 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
             customerName: name,
           }),
         });
-        if (!payRes.ok) throw new Error('Payment failed');
+        if (!payRes.ok) {
+          const data = await payRes.json().catch(() => null);
+          const detail = data?.errors?.[0]?.detail || data?.error;
+          throw new Error(detail || (lang === 'es' ? 'Pago rechazado.' : 'Payment was declined.'));
+        }
       }
 
       setConfirmedOrderId(order.id);
@@ -129,7 +164,7 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
           </div>
           <p className="font-serif text-2xl mb-4">{t.emptyCart}</p>
-          <a href="/menu" className="btn btn-cta">{t.emptyLink}</a>
+          <a href="/order" className="btn btn-cta">{t.emptyLink}</a>
         </div>
       </div>
     );
@@ -147,7 +182,7 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
             <p className="text-base-content/60 mb-5">{t.confirmedMsg}</p>
             <div className="pill text-sm py-2 px-5">{t.orderNum}{confirmedOrderId}</div>
             <div className="mt-8">
-              <a href="/menu" className="btn btn-cta w-full">{t.newOrder}</a>
+              <a href="/order" className="btn btn-cta w-full">{t.newOrder}</a>
             </div>
           </div>
         </div>
@@ -164,7 +199,7 @@ export default function CheckoutForm({ lang, squareAppId, squareLocationId }: Pr
     <div className="min-h-screen bg-base-100 py-10 lg:py-14 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <a href="/menu" className="inline-flex items-center gap-1.5 text-sm font-medium text-base-content/55 hover:text-[var(--cta)] transition-colors">
+        <a href="/order" className="inline-flex items-center gap-1.5 text-sm font-medium text-base-content/55 hover:text-[var(--cta)] transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           {t.backToOrder}
         </a>

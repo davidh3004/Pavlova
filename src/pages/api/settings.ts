@@ -8,11 +8,13 @@ const DEFAULTS = {
   id: SETTINGS_ID,
   businessName: "Pavlova Love Tampa",
   address: "3909 W Broad St, Tampa, FL 33614",
-  phone: "(813) 930-5229",
+  phone: "(407) 419-7137",
   email: null,
   hours: null,
-  instagram: "https://www.instagram.com/pavlovalove.tampa/",
-  whatsapp: "+18139305229",
+  instagram: "https://www.instagram.com/pavlovalovetampa/",
+  facebook: "https://www.facebook.com/p/Pavlovalovetampa-100064058713044/",
+  tiktok: "https://www.tiktok.com/@pavlovalovetampa0",
+  whatsapp: "+14074197137",
   bakesy: "https://bakesy.shop",
 };
 

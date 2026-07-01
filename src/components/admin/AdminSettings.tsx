@@ -81,8 +81,8 @@ export default function AdminSettings() {
         <div className="card-body">
           <h2 className="font-serif text-xl font-bold mb-4">Social Media & Links</h2>
           <div className="space-y-3">
-            <div className="form-control"><label className="label"><span className="label-text">Instagram URL</span></label><input className="input input-bordered" value={settings.instagramUrl||''} onChange={e => f('instagramUrl',e.target.value)} placeholder="https://www.instagram.com/pavlovalove.tampa/" /></div>
-            <div className="form-control"><label className="label"><span className="label-text">WhatsApp Number</span></label><input className="input input-bordered" value={settings.whatsappNumber||''} onChange={e => f('whatsappNumber',e.target.value)} placeholder="+18139305229" /></div>
+            <div className="form-control"><label className="label"><span className="label-text">Instagram URL</span></label><input className="input input-bordered" value={settings.instagramUrl||''} onChange={e => f('instagramUrl',e.target.value)} placeholder="https://www.instagram.com/pavlovalovetampa/" /></div>
+            <div className="form-control"><label className="label"><span className="label-text">WhatsApp Number</span></label><input className="input input-bordered" value={settings.whatsappNumber||''} onChange={e => f('whatsappNumber',e.target.value)} placeholder="+14074197137" /></div>
             <div className="form-control"><label className="label"><span className="label-text">Bakesy URL</span></label><input className="input input-bordered" value={settings.bakesyUrl||''} onChange={e => f('bakesyUrl',e.target.value)} placeholder="https://bakesy.shop" /></div>
             <div className="form-control"><label className="label"><span className="label-text">Google Maps URL</span></label><input className="input input-bordered" value={settings.googleMapsUrl||''} onChange={e => f('googleMapsUrl',e.target.value)} /></div>
           </div>

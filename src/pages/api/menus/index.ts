@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { COL, listAll, create } from "@/server/store";
 import { json, readBody, run } from "@/server/http";
+import { getMenuWithItems, saveMenuSections } from "@/server/menus";
 
 export const GET: APIRoute = () =>
   run(async () => {
@@ -16,8 +17,9 @@ export const POST: APIRoute = ({ request }) =>
       title: body.title ?? null,
       titleEs: body.titleEs ?? null,
       published: body.published ?? false,
-      note: body.note ?? null,
+      note: body.note ?? body.notes ?? null,
       noteEs: body.noteEs ?? null,
     });
-    return json({ ...menu, date: menu.date, createdAt: menu.createdAt }, 201);
+    if (Array.isArray(body.sections)) await saveMenuSections(menu.id, body.sections);
+    return json(await getMenuWithItems(menu.id), 201);
   });

@@ -25,6 +25,7 @@ export const COL = {
   contactMessages: "contact_messages",
   reviews: "reviews",
   gallery: "gallery_items",
+  promotions: "promotions",
   settings: "site_settings",
   adminUsers: "admin_users",
   counters: "counters",

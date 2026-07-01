@@ -41,7 +41,11 @@ export const POST: APIRoute = ({ request }) =>
         paymentId: payment.id,
         status: payment.status,
         receiptUrl: payment.receiptUrl,
-        amountMoney: payment.amountMoney,
+        // Square returns money amounts as BigInt, which JSON.stringify cannot
+        // serialize — coerce to a Number (cents) before sending.
+        amountMoney: payment.amountMoney
+          ? { amount: Number(payment.amountMoney.amount), currency: payment.amountMoney.currency }
+          : null,
       });
     } catch (err: any) {
       if (err?.errors) return json({ errors: err.errors }, 402);

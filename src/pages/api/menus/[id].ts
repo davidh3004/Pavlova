@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { COL, update, remove, removeWhere } from "@/server/store";
 import { json, error, readBody, noContent, run, toNumber } from "@/server/http";
-import { getMenuWithItems } from "@/server/menus";
+import { getMenuWithItems, saveMenuSections } from "@/server/menus";
 
 export const GET: APIRoute = ({ params }) =>
   run(async () => {
@@ -18,9 +18,11 @@ const applyUpdate: APIRoute = ({ params, request }) =>
     for (const key of ["date", "title", "titleEs", "published", "note", "noteEs"]) {
       if (body[key] !== undefined) patch[key] = body[key];
     }
+    if (body.note === undefined && body.notes !== undefined) patch.note = body.notes;
     const menu = await update(COL.menus, id, patch);
     if (!menu) return error("Not found", 404);
-    return json({ ...menu, date: menu.date, createdAt: menu.createdAt });
+    if (Array.isArray(body.sections)) await saveMenuSections(id, body.sections);
+    return json(await getMenuWithItems(id));
   });
 
 export const PUT = applyUpdate;

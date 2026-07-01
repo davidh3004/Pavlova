@@ -148,12 +148,22 @@ export function buildSeed(): DbShape {
       id: 1,
       businessName: "Pavlova Love Tampa",
       address: "3909 W Broad St, Tampa, FL 33614",
-      phone: "(813) 930-5229",
+      phone: "(407) 419-7137",
       email: "hello@pavlovalovetampa.com",
       hours: "Tue–Sun 9am–7pm · Mon Closed",
-      instagram: "https://www.instagram.com/pavlovalove.tampa/",
-      whatsapp: "+18139305229",
+      instagram: "https://www.instagram.com/pavlovalovetampa/",
+      facebook: "https://www.facebook.com/p/Pavlovalovetampa-100064058713044/",
+      tiktok: "https://www.tiktok.com/@pavlovalovetampa0",
+      whatsapp: "+14074197137",
       bakesy: "https://bakesy.shop",
+    },
+  ];
+
+  const promotions = [
+    {
+      id: 1, code: "WELCOME10", name: "Welcome Offer", description: "10% off your first online order.",
+      discountType: "percentage", discountValue: 10, minimumOrder: null,
+      active: true, usageLimit: null, usageCount: 0, startsAt: null, expiresAt: null, createdAt: now,
     },
   ];
 
@@ -178,6 +188,7 @@ export function buildSeed(): DbShape {
       products: toMap(products),
       reviews: toMap(reviews),
       gallery_items: toMap(gallery),
+      promotions: toMap(promotions),
       site_settings: toMap(siteSettings),
       menus: toMap(menus),
       menu_sections: toMap(menuSections),
@@ -188,6 +199,7 @@ export function buildSeed(): DbShape {
       products: products.length,
       reviews: reviews.length,
       gallery_items: gallery.length,
+      promotions: promotions.length,
       site_settings: siteSettings.length,
       menus: menus.length,
       menu_sections: menuSections.length,

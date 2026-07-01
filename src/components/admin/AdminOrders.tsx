@@ -4,6 +4,7 @@ interface OrderItem { id: number; name: string; quantity: number; price: number;
 interface Order {
   id: number; customerName: string; customerPhone: string; pickupTime: string;
   totalAmount: number; status: string; paymentMethod: string;
+  promoCode?: string | null; discount?: number | string;
   createdAt: string; items?: OrderItem[];
 }
 

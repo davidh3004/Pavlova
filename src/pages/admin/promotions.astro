@@ -1,0 +1,10 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import AdminPromotions from '@/components/admin/AdminPromotions';
+
+import { getAdminId } from '@/server/auth';
+if (!getAdminId(Astro.cookies)) return Astro.redirect('/admin');
+---
+<AdminLayout title="Promotions" currentPath="/admin/promotions">
+  <AdminPromotions client:load />
+</AdminLayout>

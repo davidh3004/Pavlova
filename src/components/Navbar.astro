@@ -12,7 +12,7 @@ const { lang, currentPath } = Astro.props;
 const { t } = useTranslations(lang);
 
 const links = [
-  { href: '/menu', label: t('nav.menu') },
+  { href: '/daily-menu', label: t('nav.menu') },
   { href: '/catering', label: t('nav.catering') },
   { href: '/custom-orders', label: t('nav.customOrders') },
   { href: '/about', label: t('nav.about') },
@@ -36,7 +36,7 @@ const isHome = currentPath === '/';
       : 'bg-base-100/85 backdrop-blur-md border-b border-[var(--hairline)]',
   ]}
 >
-  <div class="container-lux grid grid-cols-[1fr_auto_1fr] items-center h-[4.75rem] gap-4">
+  <div class="w-full px-6 xl:px-10 grid grid-cols-[1fr_auto_1fr] items-center h-24 lg:h-28 gap-4">
     <!-- Hamburger (mobile only) -->
     <label for="mobile-nav" class="lg:hidden -ml-2 p-2 rounded-lg hover:bg-base-200 transition-colors cursor-pointer col-start-1 justify-self-start" aria-label="Open menu">
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-base-content">
@@ -45,12 +45,12 @@ const isHome = currentPath === '/';
     </label>
 
     <!-- Logo: centered on mobile, left on desktop -->
-    <a href="/" class="group flex items-center leading-none col-start-2 justify-self-center lg:col-start-1 lg:justify-self-start" aria-label="Pavlova Love Tampa — Home">
-      <img src="/images/logo-mark.png" alt="Pavlova Love Tampa" class="h-14 lg:h-16 w-auto transition-transform duration-300 group-hover:scale-[1.03]" />
+    <a href="/" class="group flex items-center leading-none col-start-2 justify-self-center lg:col-start-1 lg:justify-self-start lg:ml-20 xl:ml-32" aria-label="Pavlova Love Tampa — Home">
+      <img src="/images/logo-mark.png" alt="Pavlova Love Tampa" class="h-20 lg:h-24 w-auto transition-transform duration-300 group-hover:scale-[1.03]" />
     </a>
 
     <!-- Center: desktop nav (true middle column of the grid) -->
-    <nav class="hidden lg:flex items-center gap-10 uppercase text-[0.7rem] font-bold tracking-widest justify-self-center col-start-2" aria-label="Primary">
+    <nav class="hidden lg:flex items-center gap-8 uppercase text-[0.7rem] font-bold tracking-widest justify-self-center col-start-2" aria-label="Primary">
       {links.map((link) => (
         <a
           href={link.href}
@@ -64,7 +64,7 @@ const isHome = currentPath === '/';
 
     <!-- Right: CTA + cart + lang -->
     <div class="flex items-center gap-2 sm:gap-3 justify-self-end col-start-3">
-      <a href="/menu" class="rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.68rem] font-bold tracking-[0.18em] h-10 px-6 hidden sm:inline-flex items-center gap-2 hover:bg-[var(--cta)] hover:text-white transition-all duration-300">
+      <a href="/order" class="whitespace-nowrap rounded-full border border-[var(--cta)] bg-[var(--cta)] text-white text-[0.68rem] font-bold tracking-[0.18em] h-10 px-6 hidden sm:inline-flex items-center gap-2 hover:bg-[var(--cta-hover)] hover:border-[var(--cta-hover)] transition-all duration-300 shadow-sm shadow-[var(--cta)]/20">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         {lang === 'es' ? 'ORDENAR' : 'ORDER PICKUP'}
       </a>
