@@ -33,7 +33,7 @@ export async function run(fn: () => Promise<Response>): Promise<Response> {
   try {
     return await fn();
   } catch (e: any) {
-    if (e?.name === "FirebaseNotConfiguredError") {
+    if (e?.name === "DatabaseNotConfiguredError" || e?.name === "FirebaseNotConfiguredError") {
       return json({ error: "Database not configured" }, 503);
     }
     console.error("[API] Unhandled error:", e);

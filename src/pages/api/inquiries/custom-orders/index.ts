@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { COL, listAll, create } from "@/server/store";
 import { json, readBody, run } from "@/server/http";
+import { notifyCustomOrderInquiry, sendEmailSafe } from "@/server/email";
 
 export const GET: APIRoute = () =>
   run(async () => {
@@ -23,5 +24,6 @@ export const POST: APIRoute = ({ request }) =>
       status: "new",
       notes: null,
     });
+    sendEmailSafe(() => notifyCustomOrderInquiry(order));
     return json({ ...order, createdAt: order.createdAt }, 201);
   });

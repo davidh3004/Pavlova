@@ -11,8 +11,8 @@
  */
 import crypto from "node:crypto";
 import type { AstroCookies } from "astro";
-import { COL } from "./store";
-import { getDb } from "./firebase";
+import { COL, getById, queryEq } from "./store";
+import { isSupabaseConfigured } from "./supabase";
 
 const PASSWORD_SALT = "pavlova_salt_2024";
 export const ADMIN_COOKIE = "pavlova_admin";
@@ -83,13 +83,11 @@ export function getAdminId(cookies: AstroCookies): number | null {
 }
 
 export async function findAdminByUsername(username: string): Promise<AdminUser | null> {
-  const db = getDb();
-  if (db) {
+  if (isSupabaseConfigured()) {
     try {
-      const snap = await db.collection(COL.adminUsers).where("username", "==", username).limit(1).get();
-      if (!snap.empty) return snap.docs[0].data() as AdminUser;
+      const rows = await queryEq(COL.adminUsers, "username", username);
+      if (rows[0]) return rows[0] as AdminUser;
     } catch (err) {
-      // Firestore unavailable/misconfigured — fall back to the default admin
       console.warn("[auth] Admin lookup failed, using default admin:", (err as Error)?.message);
     }
   }
@@ -98,11 +96,10 @@ export async function findAdminByUsername(username: string): Promise<AdminUser |
 }
 
 export async function findAdminById(id: number): Promise<AdminUser | null> {
-  const db = getDb();
-  if (db) {
+  if (isSupabaseConfigured()) {
     try {
-      const snap = await db.collection(COL.adminUsers).doc(String(id)).get();
-      if (snap.exists) return snap.data() as AdminUser;
+      const row = await getById(COL.adminUsers, id);
+      if (row) return row as AdminUser;
     } catch (err) {
       console.warn("[auth] Admin lookup failed, using default admin:", (err as Error)?.message);
     }

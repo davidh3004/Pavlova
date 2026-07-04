@@ -30,6 +30,15 @@ const assurances = [
       : 'Complimentary for events exceeding 100 guests.',
   },
 ];
+
+const galleryImages = [
+  { src: '/gallery/catering-quinceanera-table.jpg', altEn: 'Quinceañera dessert table', altEs: 'Mesa de quinceañera' },
+  { src: '/gallery/catering-berry-parfaits.jpg', altEn: 'Catering berry parfait cups', altEs: 'Vasitos de parfait para catering' },
+  { src: '/gallery/catering-quinceanera-wide.jpg', altEn: 'Event catering dessert display', altEs: 'Exhibición de catering para eventos' },
+  { src: '/gallery/birthday-pavlova-flowers.jpg', altEn: 'Celebration pavlova with flowers', altEs: 'Pavlova de celebración con flores' },
+  { src: '/gallery/birthday-pavlova-gold-topper.jpg', altEn: 'Birthday strawberry pavlova', altEs: 'Pavlova de cumpleaños' },
+  { src: '/gallery/birthday-pavlova-number-8.jpg', altEn: 'Custom number pavlova', altEs: 'Pavlova personalizada en número' },
+];
 ---
 
 <MainLayout
@@ -38,6 +47,26 @@ const assurances = [
     ? 'Catering profesional venezolano para eventos en Tampa — desde bodas hasta eventos corporativos.'
     : 'Professional Venezuelan catering for events in Tampa — weddings, corporate, birthday parties and more.'}
 >
+
+  <!-- ════════ HERO — full-bleed catering showcase ════════ -->
+  <section class="relative overflow-hidden min-h-[52vh] lg:min-h-[58vh] -mt-24 lg:-mt-28 pt-24 lg:pt-28 flex items-end">
+    <div class="absolute inset-0">
+      <img src="/gallery/catering-quinceanera-wide.jpg" alt={es ? 'Mesa de catering para eventos' : 'Event catering dessert display'} class="w-full h-full object-cover object-center scale-[0.92] md:scale-100" loading="eager" />
+      <div class="absolute inset-0 bg-[linear-gradient(180deg,oklch(30%_0.09_358_/_0.55)_0%,oklch(24%_0.06_358_/_0.82)_55%,oklch(22%_0.05_358_/_0.92)_100%)]"></div>
+    </div>
+    <div class="relative z-10 container-lux pb-14 lg:pb-20 pt-8">
+      <p class="eyebrow text-white/75 mb-4">{es ? 'Catering y Eventos' : 'Catering & Events'}</p>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.05] text-white max-w-2xl mb-4">
+        {es ? 'Endulzamos Tus' : 'We Sweeten Your'}<br/>
+        <span class="text-script text-[var(--blush)]!">{es ? 'Celebraciones' : 'Celebrations'}</span>
+      </h1>
+      <p class="text-white/75 max-w-lg text-sm lg:text-base leading-relaxed">
+        {es
+          ? 'Desde quinceañeras hasta eventos corporativos — mesas de postres, pavlovas personalizadas y catering latino hecho con amor.'
+          : 'From quinceañeras to corporate gatherings — dessert tables, custom pavlovas, and Latin catering made with love.'}
+      </p>
+    </div>
+  </section>
 
   <!-- ════════ INQUIRE ABOUT YOUR EVENT ════════ -->
   <section id="inquire" class="bg-base-100 pt-10 lg:pt-14 pb-14 lg:pb-24 scroll-mt-24">
@@ -74,5 +103,108 @@ const assurances = [
       </div>
     </div>
   </section>
+
+  <!-- ════════ CATERING GALLERY + VIDEO ════════ -->
+  <section class="bg-base-100 border-t border-[var(--hairline)] py-14 lg:py-24">
+    <div class="container-lux">
+      <div class="text-center max-w-2xl mx-auto mb-10 lg:mb-14 reveal reveal-1">
+        <p class="eyebrow text-[var(--cta)] mb-4">{es ? 'Nuestro Trabajo' : 'Our Work'}</p>
+        <h2 class="font-serif text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.08] text-base-content mb-4">
+          {es ? 'El Arte de la' : 'The Art of'}<br/>
+          <span class="text-script text-[var(--cta)]!">{es ? 'Presentación' : 'Presentation'}</span>
+        </h2>
+        <p class="text-base-content/60 text-sm leading-relaxed">
+          {es
+            ? 'Mesas de postres, pavlovas personalizadas y catering latino para cada celebración.'
+            : 'Dessert tables, custom pavlovas, and Latin catering crafted for every celebration.'}
+        </p>
+      </div>
+
+      <!-- Mosaic: video 1×2 left, 6 images in 2 rows on the right -->
+      <div class="presentation-mosaic reveal reveal-2" data-reveal>
+        <div class="presentation-video overflow-hidden rounded-[var(--radius-box)] shadow-[var(--shadow-soft)] bg-neutral/5">
+          <video
+            class="catering-showcase-video w-full h-full object-cover pointer-events-none"
+            autoplay
+            muted
+            loop
+            playsinline
+            disablepictureinpicture
+            controlslist="nodownload nofullscreen noremoteplayback"
+            aria-label={es ? 'Video de catering Pavlova Love Tampa' : 'Pavlova Love Tampa catering showcase video'}
+          >
+            <source src="/videos/catering.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        {galleryImages.map((img) => (
+          <div class="presentation-cell overflow-hidden rounded-[var(--radius-box)] shadow-[var(--shadow-soft)]">
+            <img
+              src={img.src}
+              alt={es ? img.altEs : img.altEn}
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('.catering-showcase-video').forEach((el) => {
+      const video = el;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('playsinline', '');
+      video.play().catch(() => {});
+      video.addEventListener('contextmenu', (e) => e.preventDefault());
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) video.play().catch(() => {});
+      });
+    });
+  </script>
+
+  <style>
+    /* 4×2 mosaic — video 1 col × 2 rows on the left, 6 images on the right */
+    .presentation-mosaic {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: minmax(140px, 1fr);
+      gap: 0.75rem;
+    }
+
+    .presentation-video {
+      grid-column: 1 / -1;
+      aspect-ratio: 16 / 9;
+      min-height: 200px;
+    }
+
+    @media (min-width: 640px) {
+      .presentation-mosaic {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        aspect-ratio: 2 / 1;
+        gap: 1rem;
+      }
+
+      .presentation-video {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        aspect-ratio: auto;
+        min-height: 0;
+      }
+
+      .presentation-cell {
+        min-height: 0;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .presentation-mosaic {
+        gap: 1.25rem;
+      }
+    }
+  </style>
 
 </MainLayout>

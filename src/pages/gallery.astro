@@ -2,6 +2,7 @@
 import MainLayout from '@/layouts/MainLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import { detectLang, useTranslations } from '@/i18n/utils';
+import { SITE_GALLERY } from '@/data/siteGallery';
 import { COL, listAll } from '@/server/store';
 
 const lang = detectLang(Astro.request.headers.get('cookie'));
@@ -11,6 +12,16 @@ let galleryItems: any[] = [];
 try {
   galleryItems = await listAll(COL.gallery, { orderBy: 'sortOrder', dir: 'asc' });
 } catch (_) {}
+
+if (galleryItems.length < SITE_GALLERY.length) {
+  galleryItems = SITE_GALLERY;
+}
+
+galleryItems = galleryItems.map((item) => ({
+  ...item,
+  caption: item.caption || item.title || '',
+  captionEs: item.captionEs || item.titleEs || item.title || '',
+}));
 ---
 
 <MainLayout
@@ -20,7 +31,12 @@ try {
     : 'Photo gallery of Pavlova Love Tampa — our creations, kitchen, and special moments.'}
 >
 
-  <PageHero eyebrow={lang === 'es' ? 'Fotos' : 'Photos'} title={t('gallery.title')} subtitle={t('gallery.subtitle')} />
+  <PageHero
+    eyebrow={lang === 'es' ? 'Fotos' : 'Photos'}
+    title={t('gallery.title')}
+    subtitle={t('gallery.subtitle')}
+    image="/gallery/fruit-pavlova-mixed.jpg"
+  />
 
   <!-- Gallery -->
   <section class="container-lux section">

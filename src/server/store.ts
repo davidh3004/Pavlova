@@ -1,16 +1,15 @@
 /**
- * Generic Firestore data-access layer.
+ * Generic data-access layer (Supabase-backed).
  *
- * Preserves the exact contract the frontend expects from the old Express API:
- *  - numeric, auto-incrementing IDs (via a `counters` collection + transaction)
+ * Preserves the exact contract the frontend expects:
+ *  - numeric, auto-incrementing IDs (via app_counters + RPC)
  *  - `createdAt` stored as an ISO string
  *
- * Every helper degrades gracefully when Firebase is not configured:
- * reads return empty/null, and writes throw a clear, catchable error.
+ * Every helper degrades gracefully when Supabase is not configured:
+ * reads return empty/null, and writes use the local JSON store.
  */
-import { getDb } from "./firebase";
+import { getSupabase } from "./supabase";
 import { localStore } from "./localStore";
-import type { Firestore } from "firebase-admin/firestore";
 
 export const COL = {
   categories: "categories",
@@ -31,9 +30,17 @@ export const COL = {
   counters: "counters",
 } as const;
 
-export class FirebaseNotConfiguredError extends Error {
+export class DatabaseNotConfiguredError extends Error {
   constructor() {
-    super("Firebase is not configured");
+    super("Database is not configured");
+    this.name = "DatabaseNotConfiguredError";
+  }
+}
+
+/** @deprecated Use DatabaseNotConfiguredError */
+export class FirebaseNotConfiguredError extends DatabaseNotConfiguredError {
+  constructor() {
+    super();
     this.name = "FirebaseNotConfiguredError";
   }
 }
@@ -58,34 +65,34 @@ function sortRows(rows: Row[], opts?: SortOpts): Row[] {
   });
 }
 
-async function nextId(db: Firestore, collection: string): Promise<number> {
-  const ref = db.collection(COL.counters).doc(collection);
-  return db.runTransaction(async (tx) => {
-    const snap = await tx.get(ref);
-    const current = snap.exists ? Number(snap.data()!.value ?? 0) : 0;
-    const value = current + 1;
-    tx.set(ref, { value }, { merge: true });
-    return value;
-  });
+function rowFrom(data: unknown): Row {
+  return (data ?? {}) as Row;
+}
+
+async function nextId(collection: string): Promise<number> {
+  const db = getSupabase()!;
+  const { data, error } = await db.rpc("next_app_counter", { coll: collection });
+  if (error) throw error;
+  return Number(data);
 }
 
 /** Ensure the counter for a collection is at least `value` (used by the seed). */
 export async function bumpCounter(collection: string, value: number): Promise<void> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.bumpCounter(collection, value);
-  const ref = db.collection(COL.counters).doc(collection);
-  await db.runTransaction(async (tx) => {
-    const snap = await tx.get(ref);
-    const current = snap.exists ? Number(snap.data()!.value ?? 0) : 0;
-    if (value > current) tx.set(ref, { value }, { merge: true });
-  });
+  const { error } = await db.rpc("bump_app_counter", { coll: collection, min_value: value });
+  if (error) throw error;
 }
 
 export async function listAll(collection: string, opts?: SortOpts): Promise<Row[]> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return sortRows(localStore.listAll(collection), opts);
-  const snap = await db.collection(collection).get();
-  return sortRows(snap.docs.map((d) => d.data()), opts);
+  const { data, error } = await db
+    .from("app_documents")
+    .select("data")
+    .eq("collection", collection);
+  if (error) throw error;
+  return sortRows((data ?? []).map((r) => rowFrom(r.data)), opts);
 }
 
 export async function queryEq(
@@ -94,38 +101,59 @@ export async function queryEq(
   value: unknown,
   opts?: SortOpts
 ): Promise<Row[]> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return sortRows(localStore.queryEq(collection, field, value), opts);
-  const snap = await db.collection(collection).where(field, "==", value).get();
-  return sortRows(snap.docs.map((d) => d.data()), opts);
+  const { data, error } = await db
+    .from("app_documents")
+    .select("data")
+    .eq("collection", collection)
+    .contains("data", { [field]: value });
+  if (error) throw error;
+  return sortRows((data ?? []).map((r) => rowFrom(r.data)), opts);
 }
 
 export async function getById(collection: string, id: number | string): Promise<Row | null> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.getById(collection, id);
-  const snap = await db.collection(collection).doc(String(id)).get();
-  return snap.exists ? (snap.data() as Row) : null;
+  const { data, error } = await db
+    .from("app_documents")
+    .select("data")
+    .eq("collection", collection)
+    .eq("doc_id", String(id))
+    .maybeSingle();
+  if (error) throw error;
+  return data ? rowFrom(data.data) : null;
 }
 
 export async function create(collection: string, data: Row): Promise<Row> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.create(collection, data);
-  const id = await nextId(db, collection);
+  const id = await nextId(collection);
   const doc: Row = {
     id,
     ...data,
     createdAt: data.createdAt ?? new Date().toISOString(),
   };
-  await db.collection(collection).doc(String(id)).set(doc);
+  const { error } = await db.from("app_documents").insert({
+    collection,
+    doc_id: String(id),
+    data: doc,
+  });
+  if (error) throw error;
   return doc;
 }
 
 /** Create a document at a specific id (used by the seed importer). */
 export async function setWithId(collection: string, id: number | string, data: Row): Promise<Row> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.setWithId(collection, id, data);
   const doc: Row = { id: typeof id === "string" ? id : Number(id), ...data };
-  await db.collection(collection).doc(String(id)).set(doc);
+  const { error } = await db.from("app_documents").upsert({
+    collection,
+    doc_id: String(id),
+    data: doc,
+  });
+  if (error) throw error;
   return doc;
 }
 
@@ -134,27 +162,41 @@ export async function update(
   id: number | string,
   patch: Row
 ): Promise<Row | null> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.update(collection, id, patch);
-  const ref = db.collection(collection).doc(String(id));
-  const existing = await ref.get();
-  if (!existing.exists) return null;
-  await ref.set(patch, { merge: true });
-  const snap = await ref.get();
-  return snap.data() as Row;
+  const existing = await getById(collection, id);
+  if (!existing) return null;
+  const doc = { ...existing, ...patch };
+  const { error } = await db
+    .from("app_documents")
+    .update({ data: doc })
+    .eq("collection", collection)
+    .eq("doc_id", String(id));
+  if (error) throw error;
+  return doc;
 }
 
 export async function remove(collection: string, id: number | string): Promise<void> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.remove(collection, id);
-  await db.collection(collection).doc(String(id)).delete();
+  const { error } = await db
+    .from("app_documents")
+    .delete()
+    .eq("collection", collection)
+    .eq("doc_id", String(id));
+  if (error) throw error;
 }
 
 export async function removeWhere(collection: string, field: string, value: unknown): Promise<void> {
-  const db = getDb();
+  const db = getSupabase();
   if (!db) return localStore.removeWhere(collection, field, value);
-  const snap = await db.collection(collection).where(field, "==", value).get();
-  const batch = db.batch();
-  snap.docs.forEach((d) => batch.delete(d.ref));
-  await batch.commit();
+  const rows = await queryEq(collection, field, value);
+  if (rows.length === 0) return;
+  const ids = rows.map((r) => String(r.id));
+  const { error } = await db
+    .from("app_documents")
+    .delete()
+    .eq("collection", collection)
+    .in("doc_id", ids);
+  if (error) throw error;
 }

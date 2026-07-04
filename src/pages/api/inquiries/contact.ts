@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { COL, create } from "@/server/store";
 import { json, readBody, run } from "@/server/http";
+import { notifyContactMessage, sendEmailSafe } from "@/server/email";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -13,5 +14,6 @@ export const POST: APIRoute = ({ request }) =>
       message: body.message ?? "",
       status: "new",
     });
+    sendEmailSafe(() => notifyContactMessage(message));
     return json({ ...message, createdAt: message.createdAt }, 201);
   });

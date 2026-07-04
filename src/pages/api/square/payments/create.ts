@@ -3,6 +3,8 @@ import { randomUUID } from "node:crypto";
 import { COL, update } from "@/server/store";
 import { json, error, readBody, run } from "@/server/http";
 import { getSquareClient, getSquareLocationId, decimalToSquareMoney } from "@/server/square";
+import { getOrderWithItems } from "@/server/orders";
+import { notifyNewOrder, sendEmailSafe } from "@/server/email";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -35,7 +37,13 @@ export const POST: APIRoute = ({ request }) =>
       if (response.errors?.length) return json({ errors: response.errors }, 402);
 
       const payment = response.payment!;
-      if (orderId) await update(COL.orders, Number(orderId), { status: "confirmed" });
+      if (orderId) {
+        await update(COL.orders, Number(orderId), { status: "confirmed" });
+        const fullOrder = await getOrderWithItems(Number(orderId));
+        if (fullOrder) {
+          sendEmailSafe(() => notifyNewOrder(fullOrder, { paid: true }));
+        }
+      }
 
       return json({
         paymentId: payment.id,

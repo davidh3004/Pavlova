@@ -9,7 +9,7 @@ const DEFAULTS = {
   businessName: "Pavlova Love Tampa",
   address: "3909 W Broad St, Tampa, FL 33614",
   phone: "(407) 419-7137",
-  email: null,
+  email: "hello@pavlovalovetampa.com",
   hours: null,
   instagram: "https://www.instagram.com/pavlovalovetampa/",
   facebook: "https://www.facebook.com/p/Pavlovalovetampa-100064058713044/",

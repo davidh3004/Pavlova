@@ -1,13 +1,13 @@
 /**
  * Local JSON file-backed data store.
  *
- * Acts as a drop-in fallback for Firestore when Firebase is not configured,
- * so the admin panel and public site share one persistent source of truth in
- * development with zero external setup. Data lives in `data/store.json`.
+ * Acts as a drop-in fallback when Supabase is not configured, so the admin
+ * panel and public site share one persistent source of truth in development
+ * with zero external setup. Data lives in `data/store.json`.
  *
  * NOTE: a file-based store is for local development only — it will not persist
  * on serverless platforms (e.g. Vercel) where the filesystem is read-only.
- * Configure Firebase for production and this layer steps aside automatically.
+ * Configure Supabase for production and this layer steps aside automatically.
  */
 import fs from "node:fs";
 import path from "node:path";

@@ -3,13 +3,36 @@ import MainLayout from '@/layouts/MainLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import { detectLang, useTranslations } from '@/i18n/utils';
 import { COL, listAll } from '@/server/store';
+import { fetchGoogleReviews, isGoogleReviewsConfigured } from '@/server/googleReviews';
 
 const lang = detectLang(Astro.request.headers.get('cookie'));
+const es = lang === 'es';
 const { t } = useTranslations(lang);
 
 let reviews: any[] = [];
+let googleMapsUri: string | undefined;
+let googleRatingSummary: string | undefined;
+
 try {
-  reviews = await listAll(COL.reviews, { orderBy: 'sortOrder', dir: 'asc' });
+  if (isGoogleReviewsConfigured()) {
+    const google = await fetchGoogleReviews(10);
+    googleMapsUri = google.googleMapsUri;
+    if (google.rating && google.userRatingCount) {
+      googleRatingSummary = `${google.rating.toFixed(1)} · ${google.userRatingCount} ${es ? 'reseñas en Google' : 'Google reviews'}`;
+    }
+    if (google.reviews.length > 0) {
+      reviews = google.reviews.map((r, i) => ({
+        id: `google-${i}`,
+        author: r.author,
+        text: r.text,
+        rating: r.rating,
+        platform: 'Google',
+      }));
+    }
+  }
+  if (reviews.length === 0) {
+    reviews = await listAll(COL.reviews, { orderBy: 'sortOrder', dir: 'asc' });
+  }
 } catch (_) {}
 ---
 
@@ -27,6 +50,9 @@ try {
   />
 
   <section class="container-lux section">
+    {googleRatingSummary && (
+      <p class="text-center text-base-content/55 mb-10 -mt-4">{googleRatingSummary}</p>
+    )}
     {reviews.length === 0 ? (
       <div class="text-center py-20 rounded-[var(--radius-box)] bg-base-200/50 border border-[var(--hairline)] max-w-xl mx-auto">
         <p class="font-serif text-2xl text-base-content/40">{t('reviews.noReviews')}</p>
@@ -64,7 +90,7 @@ try {
       <p class="text-base-content/60 mb-7">{lang === 'es' ? 'Déjanos una reseña en Instagram o Google para ayudarnos a crecer.' : 'Leave us a review on Instagram or Google to help us grow.'}</p>
       <div class="flex gap-3 justify-center flex-wrap">
         <a href="https://www.instagram.com/pavlovalovetampa/" target="_blank" rel="noopener noreferrer" class="btn btn-quiet px-7">Instagram</a>
-        <a href="https://g.page/r/" target="_blank" rel="noopener noreferrer" class="btn btn-quiet px-7">Google</a>
+        <a href={googleMapsUri || 'https://www.google.com/maps/search/Pavlova+Love+Tampa'} target="_blank" rel="noopener noreferrer" class="btn btn-quiet px-7">Google</a>
       </div>
     </div>
   </section>

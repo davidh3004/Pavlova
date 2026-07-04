@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { COL, create } from "@/server/store";
 import { json, error, readBody, run } from "@/server/http";
 import { generateOrderNumber, getOrdersWithItems, getOrderWithItems } from "@/server/orders";
+import { notifyNewOrder, sendEmailSafe } from "@/server/email";
 
 export const GET: APIRoute = ({ url }) =>
   run(async () => {
@@ -51,5 +52,11 @@ export const POST: APIRoute = ({ request }) =>
       });
     }
 
-    return json(await getOrderWithItems(order.id), 201);
+    const fullOrder = await getOrderWithItems(order.id);
+    // Cash/pickup orders: notify immediately. Card orders notify after payment succeeds.
+    if (body.paymentMethod !== "card") {
+      sendEmailSafe(() => notifyNewOrder(fullOrder!));
+    }
+
+    return json(fullOrder, 201);
   });

@@ -3,8 +3,8 @@
  *
  * This mirrors the content the website was originally hardcoded with, so the
  * admin panel and the public site share one source of truth out of the box.
- * It is only used by the local JSON store (when Firebase is not configured);
- * Firebase deployments are seeded separately.
+ * It is only used by the local JSON store (when Supabase is not configured);
+ * Supabase deployments are seeded with `npm run seed`.
  */
 import type { DbShape } from "./localStore";
 
@@ -134,13 +134,24 @@ export function buildSeed(): DbShape {
   ];
 
   const gallery = [
-    { id: 1, title: "Signature Pavlova", titleEs: "Pavlova Insignia", imageUrl: "/images/hero-pavlova.png", category: "desserts", sortOrder: 1, createdAt: now },
-    { id: 2, title: "Tres Leches Cake", titleEs: "Torta Tres Leches", imageUrl: "/images/signature-cake.png", category: "desserts", sortOrder: 2, createdAt: now },
-    { id: 3, title: "Fresh Pastries", titleEs: "Pastelería Fresca", imageUrl: "/images/pastries.png", category: "bakery", sortOrder: 3, createdAt: now },
-    { id: 4, title: "Catering Spread", titleEs: "Mesa de Catering", imageUrl: "/images/catering_event.png", category: "catering", sortOrder: 4, createdAt: now },
-    { id: 5, title: "Custom Celebration Cake", titleEs: "Torta Personalizada", imageUrl: "/images/custom_cake.png", category: "custom", sortOrder: 5, createdAt: now },
-    { id: 6, title: "Coffee & Pastries", titleEs: "Café y Pastelería", imageUrl: "/images/coffee_pastries.png", category: "cafe", sortOrder: 6, createdAt: now },
-    { id: 7, title: "Latin Kitchen Plate", titleEs: "Plato de Cocina Latina", imageUrl: "/images/latin_food_plate.png", category: "savory", sortOrder: 7, createdAt: now },
+    { id: 1, title: "Signature Strawberry Pavlova", titleEs: "Pavlova de Fresa Insignia", imageUrl: "/gallery/large-strawberry-pavlova-flan.jpg", category: "desserts", sortOrder: 1, createdAt: now },
+    { id: 2, title: "Individual Pavlova", titleEs: "Pavlova Individual", imageUrl: "/gallery/individual-pavlova-strawberries.jpg", category: "desserts", sortOrder: 2, createdAt: now },
+    { id: 3, title: "Mixed Fruit Pavlova", titleEs: "Pavlova de Frutas Mixtas", imageUrl: "/gallery/fruit-pavlova-mixed.jpg", category: "desserts", sortOrder: 3, createdAt: now },
+    { id: 4, title: "Dulce de Leche Cake", titleEs: "Torta de Dulce de Leche", imageUrl: "/gallery/dulce-de-leche-cake.jpg", category: "desserts", sortOrder: 4, createdAt: now },
+    { id: 5, title: "Chocolate Cake Slice", titleEs: "Porción de Torta de Chocolate", imageUrl: "/gallery/chocolate-cake-slice.jpg", category: "desserts", sortOrder: 5, createdAt: now },
+    { id: 6, title: "Milhojas Slice", titleEs: "Porción de Milhojas", imageUrl: "/gallery/milhojas-slice.jpg", category: "desserts", sortOrder: 6, createdAt: now },
+    { id: 7, title: "Custom Number Pavlova", titleEs: "Pavlova Personalizada en Número", imageUrl: "/gallery/birthday-pavlova-number-8.jpg", category: "custom", sortOrder: 7, createdAt: now },
+    { id: 8, title: "Celebration Pavlova with Flowers", titleEs: "Pavlova de Celebración con Flores", imageUrl: "/gallery/birthday-pavlova-flowers.jpg", category: "custom", sortOrder: 8, createdAt: now },
+    { id: 9, title: "Quinceañera Dessert Table", titleEs: "Mesa de Postres Quinceañera", imageUrl: "/gallery/catering-quinceanera-table.jpg", category: "catering", sortOrder: 9, createdAt: now },
+    { id: 10, title: "Event Catering Display", titleEs: "Exhibición de Catering para Eventos", imageUrl: "/gallery/catering-quinceanera-wide.jpg", category: "catering", sortOrder: 10, createdAt: now },
+    { id: 11, title: "Berry Parfait Cups", titleEs: "Vasitos de Parfait de Frutos Rojos", imageUrl: "/gallery/catering-berry-parfaits.jpg", category: "catering", sortOrder: 11, createdAt: now },
+    { id: 12, title: "Ropa Vieja Plate", titleEs: "Plato de Ropa Vieja", imageUrl: "/gallery/daily-menu-ropa-vieja.jpg", category: "savory", sortOrder: 12, createdAt: now },
+    { id: 13, title: "Pork Chop with Congri", titleEs: "Chuleta con Congri", imageUrl: "/gallery/daily-menu-pork-chop.jpg", category: "savory", sortOrder: 13, createdAt: now },
+    { id: 14, title: "Steak & Egg Sandwich", titleEs: "Sándwich de Bistec y Huevo", imageUrl: "/gallery/daily-menu-steak-sandwich.jpg", category: "savory", sortOrder: 14, createdAt: now },
+    { id: 15, title: "Tequeños", titleEs: "Tequeños", imageUrl: "/gallery/tequenos-plate.jpg", category: "savory", sortOrder: 15, createdAt: now },
+    { id: 16, title: "Fresh from Our Kitchen", titleEs: "Recién Salido de Nuestra Cocina", imageUrl: "/gallery/pavlova-branding-takeout.jpg", category: "cafe", sortOrder: 16, createdAt: now },
+    { id: 17, title: "Birthday Strawberry Pavlova", titleEs: "Pavlova de Cumpleaños", imageUrl: "/gallery/birthday-pavlova-gold-topper.jpg", category: "custom", sortOrder: 17, createdAt: now },
+    { id: 18, title: "Number 8 Birthday Pavlova", titleEs: "Pavlova Número 8", imageUrl: "/gallery/birthday-pavlova-8-topdown.jpg", category: "custom", sortOrder: 18, createdAt: now },
   ];
 
   const siteSettings = [

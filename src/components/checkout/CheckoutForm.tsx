@@ -402,13 +402,6 @@ export default function CheckoutForm({ lang }: Props) {
                 {processing && <span className="loading loading-spinner loading-sm"></span>}
                 {processing ? t.processing : t.place}
               </button>
-
-              <p className="text-[0.7rem] leading-relaxed text-center text-base-content/45 mt-4">
-                {t.agreePre}{' '}
-                <a href="/terms" className="underline hover:text-[var(--cta)] transition-colors">{t.termsOfService}</a>{' '}
-                {t.and}{' '}
-                <a href="/privacy" className="underline hover:text-[var(--cta)] transition-colors">{t.privacyPolicy}</a>.
-              </p>
             </div>
           </div>
         </div>

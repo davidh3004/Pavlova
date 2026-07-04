@@ -2,15 +2,16 @@
 import MainLayout from '@/layouts/MainLayout.astro';
 import { detectLang } from '@/i18n/utils';
 import { COL, queryEq } from '@/server/store';
+import { fetchGoogleReviews, isGoogleReviewsConfigured } from '@/server/googleReviews';
 
 const lang = detectLang(Astro.request.headers.get('cookie'));
 const es = lang === 'es';
 
 const categories = [
-  { title: es ? 'Postres' : 'Desserts', image: '/images/signature-cake.png', sub1: es ? 'Momentos dulces' : 'Sweet moments', sub2: es ? 'para compartir' : 'made to share', cta: es ? 'Ver Postres' : 'View Desserts', href: '/desserts' },
-  { title: es ? 'Menú del Día' : 'Daily Menu', image: '/images/latin_food_plate.png', sub1: es ? 'Sabores latinos frescos' : 'Fresh Latin flavors', sub2: es ? 'todos los días' : 'every single day', cta: es ? 'Ver Menú' : 'View Menu', href: '/daily-menu' },
-  { title: es ? 'Café y Pastelería' : 'Coffee & Pastries', image: '/images/coffee_pastries.png', sub1: es ? 'Tu pausa de café' : 'Your perfect', sub2: es ? 'perfecta' : 'coffee break', cta: es ? 'Ver Café' : 'View Coffee', href: '/order' },
-  { title: es ? 'Catering' : 'Catering', image: '/images/catering.png', sub1: es ? 'Eventos hechos' : 'Events made', sub2: es ? 'deliciosos' : 'delicious', cta: es ? 'Ver Catering' : 'View Catering', href: '/catering' },
+  { title: es ? 'Postres' : 'Desserts', image: '/images/home-desserts.png', sub1: es ? 'Momentos dulces' : 'Sweet moments', sub2: es ? 'para compartir' : 'made to share', cta: es ? 'Ver Postres' : 'View Desserts', href: '/desserts' },
+  { title: es ? 'Menú del Día' : 'Daily Menu', image: '/images/home-daily-menu.png', sub1: es ? 'Sabores latinos frescos' : 'Fresh Latin flavors', sub2: es ? 'todos los días' : 'every single day', cta: es ? 'Ver Menú' : 'View Menu', href: '/daily-menu' },
+  { title: es ? 'Café y Pastelería' : 'Coffee & Pastries', image: '/menu-images/sq-cafe-con-leche.jpg', sub1: es ? 'Tu pausa de café' : 'Your perfect', sub2: es ? 'perfecta' : 'coffee break', cta: es ? 'Ver Café' : 'View Coffee', href: '/order' },
+  { title: es ? 'Catering' : 'Catering', image: '/images/home-catering.png', sub1: es ? 'Eventos hechos' : 'Events made', sub2: es ? 'deliciosos' : 'delicious', cta: es ? 'Ver Catering' : 'View Catering', href: '/catering' },
 ];
 
 const fmtPrice = (cents: number) => `$${(Number(cents) / 100).toFixed(2)}`;
@@ -29,14 +30,36 @@ try {
   }));
 } catch (_) {}
 
-// Testimonials = featured reviews (managed in the admin panel).
-let testimonials = [];
+// Testimonials — live Google reviews when configured, else featured reviews from admin.
+let testimonials: Array<{ text: string; author: string; rating: number; source?: string }> = [];
+let googleMapsUri: string | undefined;
+let googleRatingSummary: string | undefined;
+
 try {
-  const reviews = await queryEq(COL.reviews, 'featured', true, { orderBy: 'sortOrder', dir: 'asc' });
-  testimonials = reviews.slice(0, 3).map((r: any) => ({
-    text: es ? (r.textEs || r.text) : r.text,
-    author: r.author,
-  }));
+  if (isGoogleReviewsConfigured()) {
+    const google = await fetchGoogleReviews(3);
+    googleMapsUri = google.googleMapsUri;
+    if (google.rating && google.userRatingCount) {
+      googleRatingSummary = `${google.rating.toFixed(1)} · ${google.userRatingCount} Google reviews`;
+    }
+    if (google.reviews.length > 0) {
+      testimonials = google.reviews.map((r) => ({
+        text: r.text,
+        author: r.author,
+        rating: r.rating,
+        source: 'Google',
+      }));
+    }
+  }
+  if (testimonials.length === 0) {
+    const reviews = await queryEq(COL.reviews, 'featured', true, { orderBy: 'sortOrder', dir: 'asc' });
+    testimonials = reviews.slice(0, 3).map((r: any) => ({
+      text: es ? (r.textEs || r.text) : r.text,
+      author: r.author,
+      rating: Number(r.rating) || 5,
+      source: r.source,
+    }));
+  }
 } catch (_) {}
 ---
 
@@ -44,17 +67,25 @@ try {
   
   <!-- HERO -->
   <section class="relative overflow-hidden min-h-[88vh] md:min-h-[86vh] -mt-24 lg:-mt-28 pt-24 lg:pt-28 flex items-center bg-[#fbeee4]">
-    <!-- Full-bleed background image -->
-    <div class="absolute inset-0">
-      <img src="/images/hero-pavlova.png" alt="Handcrafted pavlova topped with fresh berries" class="w-full h-full object-cover object-[18%_center] scale-[1.0] reveal reveal-2" />
+    <!-- Photo — flush right (edge clipped off-screen); fade only on the left -->
+    <div class="hero-photo-wrap absolute inset-0 overflow-hidden reveal reveal-2" aria-hidden="true">
+      <img
+        src="/images/hero-pavlova.png"
+        alt=""
+        class="hero-photo absolute top-1/2 right-0 h-[94%] sm:h-[98%] md:h-[102%] w-auto aspect-square max-w-none -translate-y-1/2 translate-x-[14%] sm:translate-x-[12%] md:translate-x-[10%] object-contain object-center pointer-events-none select-none"
+      />
     </div>
-    <!-- Cream gradient: keeps left text crisp, blends into photo on the right -->
-    <div class="absolute inset-0 bg-[linear-gradient(90deg,#fbeee4_0%,#fbeee4_44%,rgba(251,238,228,0.82)_58%,rgba(251,238,228,0.28)_74%,transparent_90%)]"></div>
-    <!-- Mobile readability scrim (removed on md+) -->
-    <div class="absolute inset-0 bg-[#fbeee4]/45 md:hidden"></div>
-    <!-- Soft top fade + bottom fade that dissolves into the next (white) section -->
-    <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#fffbf7]/70 to-transparent"></div>
-    <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#fbeee4]/60 to-[var(--color-base-100)]"></div>
+
+    <!-- Left text zone — solid cream -->
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,#fbeee4_0%,#fbeee4_48%,rgba(251,238,228,0.92)_60%,rgba(251,238,228,0.45)_72%,transparent_88%)] pointer-events-none"></div>
+
+    <!-- Blur vignette — left side only (blends photo into text area) -->
+    <div class="hero-edge-blur absolute inset-y-0 left-0 w-[52%] sm:w-[46%] pointer-events-none"></div>
+    <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#fbeee4] via-[#fbeee4]/50 to-transparent pointer-events-none"></div>
+    <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent via-[#fbeee4]/50 to-[var(--color-base-100)] pointer-events-none"></div>
+
+    <!-- Mobile readability -->
+    <div class="absolute inset-0 bg-[linear-gradient(180deg,#fbeee4_0%,rgba(251,238,228,0.92)_42%,rgba(251,238,228,0.65)_100%)] sm:hidden pointer-events-none"></div>
 
     <div class="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-24">
       <div class="reveal reveal-1 max-w-xl mx-auto sm:mx-0 text-center sm:text-left">
@@ -131,7 +162,7 @@ try {
     <div class="grid md:grid-cols-2 items-stretch">
       <!-- Image: full-bleed on the left -->
       <div class="reveal reveal-left relative min-h-[300px] md:min-h-[560px] overflow-hidden">
-        <img src="/images/latin_food_plate.png" alt="A freshly plated daily Latin dish" class="absolute inset-0 w-full h-full object-cover" />
+        <img src="/images/home-daily-menu.png" alt="A freshly plated daily Latin dish" class="absolute inset-0 w-full h-full object-cover" />
       </div>
 
       <!-- Content: right panel -->
@@ -211,30 +242,42 @@ try {
   <section class="bg-base-100 py-16 lg:py-24">
     <div class="container-lux">
       <!-- Testimonials -->
-      <div class="reveal flex items-center gap-4 mb-12 justify-center">
-        <hr class="hairline flex-1 max-w-[100px]" />
-        <span class="eyebrow text-base-content/60 tracking-[0.3em]">{es ? 'AMADO POR NUESTRA COMUNIDAD' : 'LOVED BY OUR COMMUNITY'}</span>
-        <hr class="hairline flex-1 max-w-[100px]" />
+      <div class="reveal flex flex-col items-center gap-3 mb-12">
+        <div class="flex items-center gap-4 justify-center w-full">
+          <hr class="hairline flex-1 max-w-[100px]" />
+          <span class="eyebrow text-base-content/60 tracking-[0.3em]">{es ? 'AMADO POR NUESTRA COMUNIDAD' : 'LOVED BY OUR COMMUNITY'}</span>
+          <hr class="hairline flex-1 max-w-[100px]" />
+        </div>
+        {googleRatingSummary && (
+          <p class="text-sm text-base-content/55">{googleRatingSummary}</p>
+        )}
       </div>
       <div class="grid md:grid-cols-3 gap-6 lg:gap-10 relative" data-reveal>
-        <button class="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors">
+        <button class="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors" type="button" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 18-6-6 6-6"/></svg>
         </button>
         {testimonials.map((t) => (
           <div class="bg-[var(--blush-soft)]/50 p-8 lg:p-9 flex flex-col h-full text-center sm:text-left items-center sm:items-start">
             <div class="flex text-[var(--cta)] mb-5 gap-1">
-              {Array.from({length:5}).map(() => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              {Array.from({length:5}).map((_, i) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill={i < t.rating ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.5"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               ))}
             </div>
             <p class="text-[0.9rem] leading-relaxed text-base-content/70 mb-7">"{t.text}"</p>
-            <p class="mt-auto text-[0.9rem] font-semibold text-base-content/85">— {t.author}</p>
+            <p class="mt-auto text-[0.9rem] font-semibold text-base-content/85">— {t.author}{t.source ? ` · ${t.source}` : ''}</p>
           </div>
         ))}
-        <button class="hidden md:block absolute -right-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors">
+        <button class="hidden md:block absolute -right-12 top-1/2 -translate-y-1/2 text-base-content/30 hover:text-[var(--cta)] transition-colors" type="button" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 18 6-6-6-6"/></svg>
         </button>
       </div>
+      {googleMapsUri && (
+        <p class="text-center mt-10">
+          <a href={googleMapsUri} target="_blank" rel="noopener noreferrer" class="text-[0.7rem] font-bold tracking-[0.18em] uppercase text-[var(--cta)] hover:text-base-content transition-colors">
+            {es ? 'Ver todas en Google' : 'See all on Google'} →
+          </a>
+        </p>
+      )}
     </div>
   </section>
 
@@ -282,5 +325,35 @@ try {
       });
     });
   </script>
+
+  <style>
+    /* Fade only the left edge of the photo into the cream background */
+    .hero-photo {
+      -webkit-mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.25) 14%,
+        rgba(0, 0, 0, 0.75) 30%,
+        #000 46%,
+        #000 100%
+      );
+      mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.25) 14%,
+        rgba(0, 0, 0, 0.75) 30%,
+        #000 46%,
+        #000 100%
+      );
+    }
+
+    .hero-edge-blur {
+      background: linear-gradient(90deg, #fbeee4 0%, rgba(251, 238, 228, 0.85) 35%, transparent 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      mask-image: linear-gradient(90deg, #000 0%, #000 45%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 45%, transparent 100%);
+    }
+  </style>
 
 </MainLayout>

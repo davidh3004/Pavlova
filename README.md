@@ -3,9 +3,9 @@
 Sitio web bilingüe (Español / Inglés) para Pavlova Love Tampa — pastelería, café
 y cocina venezolana en Tampa, Florida.
 
-Construido con **Astro**, **React**, **Tailwind CSS + DaisyUI** y **Firebase /
-Firestore** como base de datos. El proyecto es autónomo: funciona en cualquier
-computadora con Node.js y se configura por completo mediante variables de entorno.
+Construido con **Astro**, **React**, **Tailwind CSS + DaisyUI** y **Supabase**
+como base de datos. El proyecto es autónomo: funciona en cualquier computadora
+con Node.js y se configura por completo mediante variables de entorno.
 
 ---
 
@@ -32,8 +32,8 @@ npm run dev
 
 El sitio queda disponible en `http://localhost:4321`.
 
-> El sitio **arranca aunque no configures Firebase**: simplemente las secciones
-> con datos dinámicos aparecerán vacías hasta que añadas las credenciales.
+> El sitio **arranca aunque no configures Supabase**: en local usa
+> `data/store.json`. En Vercel necesitas Supabase para que los datos persistan.
 
 ---
 
@@ -41,20 +41,18 @@ El sitio queda disponible en `http://localhost:4321`.
 
 Copia `.env.example` a `.env` y completa los valores. Resumen de las variables:
 
-### Firebase / Firestore (necesario para datos dinámicos)
+### Supabase (necesario para datos dinámicos en producción)
 
 | Variable | Descripción |
 | --- | --- |
-| `FIREBASE_PROJECT_ID` | ID del proyecto de Firebase |
-| `FIREBASE_CLIENT_EMAIL` | Email de la cuenta de servicio |
-| `FIREBASE_PRIVATE_KEY` | Clave privada de la cuenta de servicio (entre comillas) |
+| `SUPABASE_URL` | Project URL (Settings → API) |
+| `SUPABASE_SERVICE_ROLE_KEY` | `service_role` key (secret, solo servidor) |
 
-Cómo obtenerlas:
+Cómo configurarlas:
 
-1. Entra a [console.firebase.google.com](https://console.firebase.google.com) y crea un proyecto.
-2. Activa **Firestore Database** (modo producción).
-3. Ve a **Configuración del proyecto → Cuentas de servicio → Generar nueva clave privada**.
-4. Del archivo JSON descargado copia `project_id`, `client_email` y `private_key`.
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. En **SQL Editor**, ejecuta el contenido de `scripts/supabase-schema.sql`.
+3. En **Project Settings → API**, copia la **Project URL** y la clave **`service_role`** (no la `anon` key).
 
 ### Panel de administración (`/admin`)
 
@@ -80,11 +78,12 @@ El checkout funciona sin Square; los pagos con tarjeta solo se activan si lo con
 ## Cargar los datos iniciales (seed)
 
 El proyecto incluye los datos actuales (categorías, productos, menú, reseñas y
-ajustes del sitio) en `scripts/seed-data.json`. Para cargarlos en tu Firestore:
+ajustes del sitio) en `scripts/seed-data.json`. Para cargarlos en Supabase:
 
 ```bash
-# Con las credenciales de Firebase ya puestas en .env
-node scripts/seed-firestore.mjs
+# Con SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY ya puestos en .env
+# y el schema SQL ya ejecutado
+npm run seed
 ```
 
 El script se puede ejecutar varias veces sin crear duplicados.
@@ -110,7 +109,7 @@ El script se puede ejecutar varias veces sin crear duplicados.
 4. En **Settings → Environment Variables** añade las mismas variables de tu `.env`.
 5. Despliega. ¡Listo!
 
-> Importante: en Vercel pega la `FIREBASE_PRIVATE_KEY` tal cual (con los `\n`).
+> Importante: en Vercel usa la clave **`service_role`**, nunca la `anon` key.
 
 ---
 
@@ -123,7 +122,7 @@ src/
     admin/             Panel de administración
     api/               Endpoints REST (respaldados por Firestore)
   components/          Componentes de UI (incluye islas de React)
-  server/              Capa de datos: Firebase, Firestore, auth, Square
+  server/              Capa de datos: Supabase, auth, Square
   i18n/                Traducciones ES / EN
 scripts/
   seed-data.json       Datos exportados
