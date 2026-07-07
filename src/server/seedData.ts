@@ -7,6 +7,7 @@
  * Supabase deployments are seeded with `npm run seed`.
  */
 import type { DbShape } from "./localStore";
+import { todayDateString } from "@/lib/dates";
 
 function toMap(rows: any[]): Record<string, any> {
   const m: Record<string, any> = {};
@@ -16,7 +17,7 @@ function toMap(rows: any[]): Record<string, any> {
 
 export function buildSeed(): DbShape {
   const now = new Date().toISOString();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayDateString();
 
   const categories = [
     { id: 1, name: "Desserts", nameEs: "Postres", slug: "desserts", sortOrder: 1 },

@@ -16,11 +16,11 @@ const categories = [
 
 const fmtPrice = (cents: number) => `$${(Number(cents) / 100).toFixed(2)}`;
 
-// Signature desserts = featured products (managed in the admin panel).
-let signatureDesserts = [];
+// Signature meals = featured products (managed in the admin panel).
+let signatureMeals = [];
 try {
   const featured = (await queryEq(COL.products, 'featured', true, { orderBy: 'sortOrder', dir: 'asc' })).slice(0, 6);
-  signatureDesserts = featured.map((p: any) => ({
+  signatureMeals = featured.map((p: any) => ({
     id: p.id,
     name: p.name,
     nameEs: p.nameEs || p.name,
@@ -185,8 +185,9 @@ try {
             <p class="text-base-content/70 max-w-sm mx-auto md:mx-0 mb-8 leading-relaxed">
               {es ? 'Nuestra cocina crea un nuevo menú cada día con los ingredientes más frescos.' : 'Our kitchen creates a new menu every single day using the freshest ingredients.'}
             </p>
-            <a href="/daily-menu" class="text-[0.7rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)] hover:text-base-content transition-colors inline-flex items-center gap-2">
-              {es ? 'VER MENÚ' : 'VIEW MENU'} <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <a href="/daily-menu" class="btn btn-cta rounded-full px-7 py-3 h-auto text-[0.75rem] tracking-widest gap-2 w-max shadow-lg shadow-[var(--cta)]/25">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+              {es ? 'VER MENÚ' : 'VIEW MENU'}
             </a>
           </div>
         </div>
@@ -194,34 +195,34 @@ try {
     </div>
   </section>
 
-  <!-- OUR SIGNATURE DESSERTS -->
+  <!-- OUR SIGNATURE MEALS -->
   <section class="bg-base-100 py-20 lg:py-28">
     <div class="container-lux">
       <div class="reveal flex items-center gap-5 mb-14 justify-center">
         <hr class="hairline flex-1" />
         <span class="eyebrow text-base-content/60 tracking-[0.3em] inline-flex items-center gap-2 whitespace-nowrap">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cta)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
-          {es ? 'NUESTROS POSTRES INSIGNIA' : 'OUR SIGNATURE DESSERTS'}
+          {es ? 'NUESTRAS COMIDAS INSIGNIA' : 'OUR SIGNATURE MEALS'}
         </span>
         <hr class="hairline flex-1" />
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-7 mb-14" data-reveal>
-        {signatureDesserts.map((dessert) => (
+        {signatureMeals.map((meal) => (
           <div class="group">
             <div class="overflow-hidden rounded-2xl shadow-[var(--shadow-soft)] mb-4 bg-base-200">
-              <img src={dessert.image} alt={es ? dessert.nameEs : dessert.name} class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={meal.image} alt={es ? meal.nameEs : meal.name} class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
-            <h3 class="font-serif text-[0.95rem] font-semibold leading-tight text-base-content mb-0.5">{es ? dessert.nameEs : dessert.name}</h3>
-            <p class="text-[0.8rem] text-base-content/60 mb-3">{dessert.price}</p>
+            <h3 class="font-serif text-[0.95rem] font-semibold leading-tight text-base-content mb-0.5">{es ? meal.nameEs : meal.name}</h3>
+            <p class="text-[0.8rem] text-base-content/60 mb-3">{meal.price}</p>
             <button
               type="button"
               data-add-to-cart
-              data-id={dessert.id}
-              data-name={dessert.name}
-              data-name-es={dessert.nameEs}
-              data-price={dessert.priceCents}
-              data-image={dessert.image}
+              data-id={meal.id}
+              data-name={meal.name}
+              data-name-es={meal.nameEs}
+              data-price={meal.priceCents}
+              data-image={meal.image}
               class="block mx-auto w-max py-2 px-8 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.62rem] tracking-[0.18em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all"
             >
               {es ? '+ AGREGAR' : '+ ADD'}
@@ -231,8 +232,8 @@ try {
       </div>
 
       <div class="reveal text-center">
-        <a href="/order" class="inline-block py-3.5 px-10 rounded-full border border-[var(--cta)] text-[var(--cta)] text-[0.7rem] tracking-[0.2em] font-bold hover:bg-[var(--cta)] hover:text-white transition-all">
-          {es ? 'VER TODOS LOS POSTRES' : 'VIEW ALL DESSERTS'}
+        <a href="/order" class="btn btn-cta rounded-full px-10 py-3.5 h-auto text-[0.7rem] tracking-[0.2em] shadow-lg shadow-[var(--cta)]/25">
+          {es ? 'VER TODAS LAS COMIDAS' : 'VIEW ALL MEALS'}
         </a>
       </div>
     </div>

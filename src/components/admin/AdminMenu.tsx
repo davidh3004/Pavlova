@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { todayDateString } from '@/lib/dates';
 
 interface MenuItem { id?: number; productId?: number | null; name: string; nameEs: string; price?: number; description?: string; imageUrl?: string | null; featured: boolean; soldOut: boolean; sortOrder: number; }
 interface MenuSection { id?: number; title: string; titleEs: string; sortOrder: number; items: MenuItem[]; }
 interface DailyMenu { id?: number; date: string; title?: string; titleEs?: string; published: boolean; note?: string; sections: MenuSection[]; }
 interface Product { id: number; name: string; nameEs?: string; price?: string | number; description?: string; descriptionEs?: string; imageUrl?: string | null; categoryName?: string; }
 
-const TODAY = new Date().toISOString().split('T')[0];
+const TODAY = todayDateString();
 
 /** Normalizes a menu coming from the API into the editor's working shape. */
 function normalize(data: any, fallbackDate: string): DailyMenu {

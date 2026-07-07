@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { addToCart } from '@/stores/cart';
 import { openCart } from '@/stores/ui';
 import type { Lang } from '@/stores/language';
@@ -13,6 +13,7 @@ interface Product {
   imageUrl?: string | null;
   available: boolean;
   categoryId?: number;
+  sortOrder?: number;
 }
 
 interface Category {
@@ -76,6 +77,11 @@ export default function OrderPage({ lang }: { lang: Lang }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [qty, setQty] = useState(1);
   const [instructions, setInstructions] = useState('');
+  const catScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollCategories = (direction: -1 | 1) => {
+    catScrollRef.current?.scrollBy({ left: direction * 220, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -96,12 +102,14 @@ export default function OrderPage({ lang }: { lang: Lang }) {
   }, []);
 
   const q = search.trim().toLowerCase();
-  const filtered = products.filter((p) => {
-    if (activeCategory && p.categoryId !== activeCategory) return false;
-    if (!q) return true;
-    return [p.name, p.nameEs, p.description, p.descriptionEs]
-      .some((v) => (v || '').toLowerCase().includes(q));
-  });
+  const filtered = products
+    .filter((p) => {
+      if (activeCategory && p.categoryId !== activeCategory) return false;
+      if (!q) return true;
+      return [p.name, p.nameEs, p.description, p.descriptionEs]
+        .some((v) => (v || '').toLowerCase().includes(q));
+    })
+    .sort((a, b) => (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0));
 
   const priceOf = (p: Product) => Number(p.price) || 0;
   const fmtPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
@@ -165,8 +173,52 @@ export default function OrderPage({ lang }: { lang: Lang }) {
                 className="w-full rounded-full border border-[var(--hairline)] bg-base-100 pl-11 pr-4 h-11 text-sm text-base-content placeholder:text-base-content/40 focus:border-[var(--cta)] focus:outline-none focus:ring-2 focus:ring-[var(--cta)]/15 transition-all"
               />
             </div>
-            {/* Categories */}
-            <div className="flex gap-2 overflow-x-auto pb-0.5 scrollbar-none -mx-1 px-1">
+            {/* Categories — scroll arrows on desktop */}
+            <div className="hidden lg:flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollCategories(-1)}
+                aria-label="Scroll categories left"
+                className="shrink-0 w-9 h-9 grid place-items-center rounded-full border border-[var(--hairline)] bg-base-100 text-base-content/70 hover:border-[var(--cta)] hover:text-[var(--cta)] transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <div ref={catScrollRef} className="flex gap-2 overflow-x-auto pb-0.5 scrollbar-none flex-1 min-w-0">
+                <button
+                  onClick={() => setActiveCategory(null)}
+                  className={`shrink-0 rounded-full px-5 h-9 text-[0.7rem] font-bold tracking-[0.12em] uppercase transition-colors ${
+                    activeCategory === null
+                      ? 'bg-[var(--cta)] text-white'
+                      : 'bg-[var(--blush-soft)] text-base-content/70 hover:text-[var(--cta)]'
+                  }`}
+                >
+                  {lbl.all}
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`shrink-0 rounded-full px-5 h-9 text-[0.7rem] font-bold tracking-[0.12em] uppercase whitespace-nowrap transition-colors ${
+                      activeCategory === cat.id
+                        ? 'bg-[var(--cta)] text-white'
+                        : 'bg-[var(--blush-soft)] text-base-content/70 hover:text-[var(--cta)]'
+                    }`}
+                  >
+                    {es ? cat.nameEs || cat.name : cat.name}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollCategories(1)}
+                aria-label="Scroll categories right"
+                className="shrink-0 w-9 h-9 grid place-items-center rounded-full border border-[var(--hairline)] bg-base-100 text-base-content/70 hover:border-[var(--cta)] hover:text-[var(--cta)] transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+            {/* Categories — mobile swipe only */}
+            <div className="flex lg:hidden gap-2 overflow-x-auto pb-0.5 scrollbar-none -mx-1 px-1">
               <button
                 onClick={() => setActiveCategory(null)}
                 className={`shrink-0 rounded-full px-5 h-9 text-[0.7rem] font-bold tracking-[0.12em] uppercase transition-colors ${
