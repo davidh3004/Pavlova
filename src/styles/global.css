@@ -161,6 +161,23 @@ h1, h2, h3, h4, h5, h6,
   outline-offset: 3px;
 }
 
+/* Native Apple Pay button — WebKit draws the platform mark, so this stays
+   a plain unstyled <button> and only sets the required CSS values. */
+.apple-pay-button {
+  width: 100%;
+  height: 48px;
+  display: inline-block;
+  border-radius: var(--rounded-btn);
+  cursor: pointer;
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: plain;
+  -apple-pay-button-style: black;
+}
+.apple-pay-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Elegant outline button on light surfaces */
 .btn-quiet {
   background: transparent;
