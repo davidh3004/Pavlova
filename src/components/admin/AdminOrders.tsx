@@ -10,6 +10,8 @@ interface Order {
 
 const STATUSES = ['pending','confirmed','ready','completed','cancelled'];
 const STATUS_COLORS: Record<string,string> = { pending:'badge-warning', confirmed:'badge-info', ready:'badge-success', completed:'badge-ghost', cancelled:'badge-error' };
+const PAYMENT_LABELS: Record<string,string> = { card: 'Card', applepay: 'Apple Pay', googlepay: 'Google Pay' };
+const formatPaymentMethod = (method: string) => PAYMENT_LABELS[method] ?? method;
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -107,7 +109,7 @@ export default function AdminOrders() {
                 <div><span className="text-base-content/50">Customer</span><p className="font-medium">{selected.customerName}</p></div>
                 <div><span className="text-base-content/50">Phone</span><p className="font-medium">{selected.customerPhone}</p></div>
                 <div><span className="text-base-content/50">Pickup Time</span><p className="font-medium">{selected.pickupTime}</p></div>
-                <div><span className="text-base-content/50">Payment</span><p className="font-medium capitalize">{selected.paymentMethod}</p></div>
+                <div><span className="text-base-content/50">Payment</span><p className="font-medium">{formatPaymentMethod(selected.paymentMethod)}</p></div>
               </div>
               {selected.items && selected.items.length > 0 && (
                 <div>

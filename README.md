@@ -62,7 +62,7 @@ Cómo configurarlas:
 | `ADMIN_PASSWORD` | Contraseña del panel | `pavlovalove2024` |
 | `SESSION_SECRET` | Texto aleatorio para firmar la sesión | (cámbialo) |
 
-### Square (pagos en línea — opcional)
+### Square (pagos en línea — requerido)
 
 | Variable | Descripción |
 | --- | --- |
@@ -71,7 +71,13 @@ Cómo configurarlas:
 | `SQUARE_LOCATION_ID` | ID de la ubicación de Square |
 | `SQUARE_ENVIRONMENT` | `sandbox` (pruebas) o `production` (real) |
 
-El checkout funciona sin Square; los pagos con tarjeta solo se activan si lo configuras.
+El checkout ya no tiene la opción de "pagar al recoger": Tarjeta, Apple Pay y Google Pay
+se procesan en línea a través de Square, así que estas variables son necesarias para
+poder finalizar un pedido. Tarjeta y Google Pay funcionan con solo configurar lo anterior.
+Apple Pay además requiere registrar este dominio en el Square Developer Dashboard
+(sección Apple Pay) y alojar el archivo de verificación que te den en
+`public/.well-known/apple-developer-merchantid-domain-association` (solo funciona por
+HTTPS, no en localhost).
 
 ---
 

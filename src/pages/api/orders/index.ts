@@ -53,8 +53,11 @@ export const POST: APIRoute = ({ request }) =>
     }
 
     const fullOrder = await getOrderWithItems(order.id);
-    // Cash/pickup orders: notify immediately. Card orders notify after payment succeeds.
-    if (body.paymentMethod !== "card") {
+    // All current payment methods (card, Apple Pay, Google Pay) are prepaid online,
+    // so only notify once the payment actually succeeds (see square/payments/create.ts).
+    // Anything else (no payment method set) is notified immediately.
+    const PREPAID_METHODS = ["card", "applepay", "googlepay"];
+    if (!PREPAID_METHODS.includes(body.paymentMethod)) {
       sendEmailSafe(() => notifyNewOrder(fullOrder!));
     }
 
