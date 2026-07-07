@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { COL, update, remove } from "@/server/store";
+import { COL, update, remove, queryEq } from "@/server/store";
 import { json, error, readBody, noContent, run, toNumber } from "@/server/http";
 
 const applyUpdate: APIRoute = ({ params, request }) =>
@@ -20,6 +20,14 @@ export const PATCH = applyUpdate;
 
 export const DELETE: APIRoute = ({ params }) =>
   run(async () => {
-    await remove(COL.categories, toNumber(params.id));
+    const id = toNumber(params.id);
+    const products = await queryEq(COL.products, "categoryId", id);
+    if (products.length > 0) {
+      return error(
+        `Cannot delete: ${products.length} product(s) use this category. Reassign them first.`,
+        409,
+      );
+    }
+    await remove(COL.categories, id);
     return noContent();
   });

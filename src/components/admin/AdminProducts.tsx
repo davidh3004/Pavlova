@@ -248,9 +248,14 @@ export default function AdminProducts() {
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="font-serif text-3xl font-bold">Products</h1>
-        {tab === 'products' && (
-          <button className="btn btn-primary btn-sm" onClick={openCreate}>+ Add Product</button>
-        )}
+        <div className="flex items-center gap-2">
+          {tab === 'products' && (
+            <>
+              <a href="/admin/categories" className="btn btn-ghost btn-sm">Categories</a>
+              <button className="btn btn-primary btn-sm" onClick={openCreate}>+ Add Product</button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="tabs tabs-boxed bg-base-100 mb-6 w-fit max-w-full flex-wrap">

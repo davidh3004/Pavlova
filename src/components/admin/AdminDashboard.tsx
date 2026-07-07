@@ -69,6 +69,7 @@ export default function AdminDashboard() {
 
   const quickLinks = [
     { href: '/admin/products', paths: ['M2 21h20', 'M4 21v-8h16v8', 'M5 13V9a7 7 0 0 1 14 0v4', 'M12 2v3'], label: 'Manage Products' },
+    { href: '/admin/categories', paths: ['M4 6h7v7H4zM13 6h7v7h-7zM4 15h7v7H4zM13 15h7v7h-7z'], label: 'Categories' },
     { href: '/admin/menu', paths: ['M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'], label: 'Daily Menu' },
     { href: '/admin/reviews', paths: ['m12 3 2.6 5.6 6.1.7-4.5 4.1 1.2 6L12 17.8 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z'], label: 'Reviews' },
     { href: '/admin/settings', paths: ['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z', 'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'], label: 'Settings' },
