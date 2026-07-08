@@ -253,11 +253,25 @@ export default function CheckoutForm({ lang }: Props) {
     return Object.keys(e).length === 0;
   };
 
-  const completePaidOrder = async (orderId: number) => {
-    setConfirmedPickupTime(pickupTime === 'asap' ? t.asap : pickupTime);
+  const completePaidOrder = (orderId: number) => {
+    const pickupLabel = pickupTime === 'asap' ? t.asap : pickupTime;
+    setConfirmedPickupTime(pickupLabel);
     setConfirmedOrderId(orderId);
-    clearCart();
+    // Clear cart after React commits confirmation state — otherwise nanostore
+    // updates first and the empty-cart branch wins over the success screen.
+    queueMicrotask(() => clearCart());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    if (import.meta.env.DEV && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('preview') === 'confirmation') {
+        setConfirmedOrderId(12345);
+        setConfirmedPickupTime(t.asap);
+      }
+    }
+  }, [t.asap]);
 
   const chargeOrder = async (orderId: number, token: string) => {
     const payRes = await fetch('/api/square/payments/create', {
@@ -367,24 +381,10 @@ export default function CheckoutForm({ lang }: Props) {
 
   useEffect(() => { walletPayRef.current = payWithWallet; });
 
-  if (items.length === 0 && !confirmedOrderId) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="grid place-items-center w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--blush-soft)] text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-          </div>
-          <p className="font-serif text-2xl mb-4">{t.emptyCart}</p>
-          <a href="/order" className="btn btn-cta">{t.emptyLink}</a>
-        </div>
-      </div>
-    );
-  }
-
   if (confirmedOrderId) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="bg-white rounded-[var(--radius-box)] border border-[var(--hairline)] shadow-[var(--shadow-lift)] max-w-md w-full">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-10 bg-base-100 overflow-y-auto">
+        <div className="bg-white rounded-[var(--radius-box)] border border-[var(--hairline)] shadow-[var(--shadow-lift)] max-w-md w-full my-auto">
           <div className="text-center p-10">
             <div className="grid place-items-center w-16 h-16 mx-auto mb-5 rounded-full bg-emerald-50 text-emerald-600">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -404,6 +404,20 @@ export default function CheckoutForm({ lang }: Props) {
               <a href="/order" className="btn btn-cta w-full">{t.newOrder}</a>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="grid place-items-center w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--blush-soft)] text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          </div>
+          <p className="font-serif text-2xl mb-4">{t.emptyCart}</p>
+          <a href="/order" className="btn btn-cta">{t.emptyLink}</a>
         </div>
       </div>
     );
