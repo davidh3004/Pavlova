@@ -4,7 +4,7 @@ import { COL, update } from "@/server/store";
 import { json, error, readBody, run } from "@/server/http";
 import { getSquareClient, getSquareLocationId, decimalToSquareMoney } from "@/server/square";
 import { getOrderWithItems } from "@/server/orders";
-import { notifyNewOrder, sendEmailSafe } from "@/server/email";
+import { notifyNewOrder, notifyOrderConfirmation, sendEmailSafe } from "@/server/email";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -41,7 +41,10 @@ export const POST: APIRoute = ({ request }) =>
         await update(COL.orders, Number(orderId), { status: "confirmed" });
         const fullOrder = await getOrderWithItems(Number(orderId));
         if (fullOrder) {
-          sendEmailSafe(() => notifyNewOrder(fullOrder, { paid: true }));
+          sendEmailSafe(async () => {
+            await notifyNewOrder(fullOrder, { paid: true });
+            await notifyOrderConfirmation(fullOrder, { paid: true });
+          });
         }
       }
 

@@ -175,20 +175,35 @@ export async function notifyCustomOrderInquiry(inq: {
   servings?: string | null;
   details?: string | null;
   budget?: string | null;
+  dessertType?: string | null;
+  size?: string | null;
+  flavors?: string | null;
+  imageUrl?: string | null;
+  notes?: string | null;
 }): Promise<void> {
   const to = await getNotifyEmail();
   const body =
     row("Name", inq.name) +
     row("Email", inq.email) +
     row("Phone", inq.phone) +
+    row("Dessert type", inq.dessertType ?? inq.occasion) +
+    row("Size / servings", inq.size ?? inq.servings) +
+    row("Needed by", inq.neededDate) +
     row("Occasion", inq.occasion) +
-    row("Date needed", inq.neededDate) +
-    row("Servings", inq.servings) +
     row("Budget", inq.budget) +
+    (inq.flavors
+      ? `<tr><td colspan="2" style="padding:12px 0 6px;color:#666">Flavors & preferences</td></tr>
+         <tr><td colspan="2" style="padding:0;white-space:pre-wrap">${esc(inq.flavors)}</td></tr>`
+      : "") +
     (inq.details
       ? `<tr><td colspan="2" style="padding:12px 0 6px;color:#666">Details</td></tr>
          <tr><td colspan="2" style="padding:0;white-space:pre-wrap">${esc(inq.details)}</td></tr>`
-      : "");
+      : "") +
+    (inq.notes
+      ? `<tr><td colspan="2" style="padding:12px 0 6px;color:#666">Notes</td></tr>
+         <tr><td colspan="2" style="padding:0;white-space:pre-wrap">${esc(inq.notes)}</td></tr>`
+      : "") +
+    row("Inspiration image", inq.imageUrl);
 
   await sendEmail({
     to,
@@ -258,5 +273,44 @@ export async function notifyNewOrder(
     subject: `${title} ${label}`,
     html: wrap(title, body),
     replyTo: order.customerEmail || undefined,
+  });
+}
+
+/** Customer receipt after placing a pickup order (optional — requires email). */
+export async function notifyOrderConfirmation(
+  order: {
+    id: number;
+    orderNumber?: string;
+    customerName?: string;
+    customerEmail?: string | null;
+    pickupTime?: string | null;
+    paymentMethod?: string | null;
+    totalAmount?: number;
+    total?: string;
+    items?: Array<{ name: string; quantity: number; price: number }>;
+  },
+  opts?: { paid?: boolean },
+): Promise<void> {
+  if (!order.customerEmail) return;
+
+  const label = order.orderNumber || `#${order.id}`;
+  const totalCents = order.totalAmount ?? Math.round(Number(order.total ?? 0));
+  const itemsHtml = (order.items ?? [])
+    .map(
+      (i) =>
+        `<li>${esc(i.quantity)}× ${esc(i.name)} — ${formatCents(Number(i.price) * Number(i.quantity))}</li>`,
+    )
+    .join("");
+
+  const body =
+    `<p style="font-family:system-ui,sans-serif">Hi ${esc(order.customerName || "there")},</p>
+     <p style="font-family:system-ui,sans-serif">Thank you for your order! We'll have it ready for pickup.</p>
+     ${wrap("Order summary", row("Order", label) + row("Pickup", order.pickupTime) + row("Payment", order.paymentMethod) + row("Status", opts?.paid ? "Paid online" : "Pay at pickup") + row("Total", formatCents(totalCents)) + (itemsHtml ? `<tr><td colspan="2"><ul style="margin:8px 0 0;padding-left:18px">${itemsHtml}</ul></td></tr>` : ""))}
+     <p style="font-family:system-ui,sans-serif;color:#666">— Pavlova Love Tampa<br>3909 W Broad St, Tampa, FL 33614</p>`;
+
+  await sendEmail({
+    to: order.customerEmail,
+    subject: `Order confirmed ${label} — Pavlova Love Tampa`,
+    html: body,
   });
 }

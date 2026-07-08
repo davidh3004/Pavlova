@@ -57,8 +57,8 @@ export const POST: APIRoute = ({ request }) =>
     // so only notify once the payment actually succeeds (see square/payments/create.ts).
     // Anything else (no payment method set) is notified immediately.
     const PREPAID_METHODS = ["card", "applepay", "googlepay"];
-    if (!PREPAID_METHODS.includes(body.paymentMethod)) {
-      sendEmailSafe(() => notifyNewOrder(fullOrder!));
+    if (fullOrder && !PREPAID_METHODS.includes(body.paymentMethod)) {
+      sendEmailSafe(() => notifyNewOrder(fullOrder, { paid: false }));
     }
 
     return json(fullOrder, 201);

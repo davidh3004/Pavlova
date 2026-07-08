@@ -1,5 +1,29 @@
 import { useState, useEffect } from 'react';
 
+function EmailStatus() {
+  const [status, setStatus] = useState<{ configured: boolean; notifyEmail: string; notifySource: string } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/email-status')
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setStatus)
+      .catch(() => setStatus(null));
+  }, []);
+
+  if (!status) return <span className="text-sm text-base-content/40">Checking…</span>;
+
+  return (
+    <div className="flex flex-wrap items-center gap-3 text-sm">
+      <span className={`badge ${status.configured ? 'badge-success' : 'badge-warning'}`}>
+        {status.configured ? 'Resend configured' : 'Resend not configured'}
+      </span>
+      <span className="text-base-content/70">
+        Alerts go to <strong>{status.notifyEmail}</strong> ({status.notifySource})
+      </span>
+    </div>
+  );
+}
+
 interface Settings {
   businessName?: string; phone?: string; email?: string; address?: string;
   hoursWeekday?: string; hoursSaturday?: string; hoursSunday?: string;
@@ -49,6 +73,19 @@ export default function AdminSettings() {
         <button className="btn btn-primary" onClick={save} disabled={saving}>
           {saving ? 'Saving...' : saved ? '✓ Saved!' : '💾 Save Settings'}
         </button>
+      </div>
+
+      {/* Email notifications */}
+      <div className="card bg-base-100 shadow-sm">
+        <div className="card-body">
+          <h2 className="font-serif text-xl font-bold mb-2">Email Notifications</h2>
+          <p className="text-sm text-base-content/60 mb-4">
+            Order and form alerts are sent via Resend when <code className="text-xs">RESEND_API_KEY</code> and{' '}
+            <code className="text-xs">RESEND_FROM_EMAIL</code> are set in your hosting environment (Vercel).
+            The inbox above is used unless you set a separate <code className="text-xs">NOTIFY_EMAIL</code> env var.
+          </p>
+          <EmailStatus />
+        </div>
       </div>
 
       {/* Business Info */}
