@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { json, error, run } from "@/server/http";
 import { getAdminId } from "@/server/auth";
 import { isEmailConfigured } from "@/server/email";
+import { isSmsConfigured } from "@/server/sms";
 import { COL, getById } from "@/server/store";
 
 export const GET: APIRoute = ({ cookies }) =>
@@ -19,6 +20,7 @@ export const GET: APIRoute = ({ cookies }) =>
 
     return json({
       configured: isEmailConfigured(),
+      smsConfigured: isSmsConfigured(),
       notifyEmail: notifyFromEnv || notifyFromSettings || "hello@pavlovalovetampa.com",
       notifySource: notifyFromEnv ? "NOTIFY_EMAIL env" : notifyFromSettings ? "Site settings email" : "Default",
     });

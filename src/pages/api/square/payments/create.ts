@@ -5,6 +5,7 @@ import { json, error, readBody, run } from "@/server/http";
 import { getSquareClient, getSquareLocationId, decimalToSquareMoney } from "@/server/square";
 import { getOrderWithItems } from "@/server/orders";
 import { notifyNewOrder, notifyOrderConfirmation, sendEmailSafe } from "@/server/email";
+import { notifyOrderSmsConfirmation, sendSmsSafe } from "@/server/sms";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -64,6 +65,7 @@ export const POST: APIRoute = ({ request }) =>
             await notifyNewOrder(fullOrder, { paid: true });
             await notifyOrderConfirmation(fullOrder, { paid: true });
           });
+          sendSmsSafe(() => notifyOrderSmsConfirmation(fullOrder));
         }
       }
 

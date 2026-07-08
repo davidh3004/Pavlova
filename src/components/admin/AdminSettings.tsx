@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function EmailStatus() {
-  const [status, setStatus] = useState<{ configured: boolean; notifyEmail: string; notifySource: string } | null>(null);
+  const [status, setStatus] = useState<{ configured: boolean; smsConfigured: boolean; notifyEmail: string; notifySource: string } | null>(null);
 
   useEffect(() => {
     fetch('/api/admin/email-status')
@@ -16,6 +16,9 @@ function EmailStatus() {
     <div className="flex flex-wrap items-center gap-3 text-sm">
       <span className={`badge ${status.configured ? 'badge-success' : 'badge-warning'}`}>
         {status.configured ? 'Resend configured' : 'Resend not configured'}
+      </span>
+      <span className={`badge ${status.smsConfigured ? 'badge-success' : 'badge-ghost'}`}>
+        {status.smsConfigured ? 'SMS configured' : 'SMS not configured'}
       </span>
       <span className="text-base-content/70">
         Alerts go to <strong>{status.notifyEmail}</strong> ({status.notifySource})
