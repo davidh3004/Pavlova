@@ -17,12 +17,32 @@ export const POST: APIRoute = ({ request }) =>
 
     try {
       const amountMoney = decimalToSquareMoney(amount);
+      let paymentNote = note as string | undefined;
+      if (!paymentNote && orderId) {
+        const fullOrder = await getOrderWithItems(Number(orderId));
+        if (fullOrder) {
+          const items = (fullOrder.items ?? [])
+            .map((i) => `${i.quantity}x ${i.name}`)
+            .join(", ");
+          paymentNote = [
+            `Order ${fullOrder.orderNumber || `#${orderId}`}`,
+            fullOrder.customerName,
+            fullOrder.customerPhone,
+            fullOrder.pickupTime ? `Pickup: ${fullOrder.pickupTime}` : null,
+            items ? `Items: ${items}` : null,
+          ]
+            .filter(Boolean)
+            .join(" | ")
+            .slice(0, 500);
+        }
+      }
+
       const response = await client.payments.create({
         sourceId,
         idempotencyKey: randomUUID(),
         amountMoney: { amount: BigInt(amountMoney), currency },
         locationId: getSquareLocationId(),
-        note: note ?? `Pavlova Love Order${orderId ? ` #${orderId}` : ""}`,
+        note: paymentNote ?? `Pavlova Love Order${orderId ? ` #${orderId}` : ""}`,
         buyerEmailAddress: customerEmail,
         ...(customerName
           ? {

@@ -44,8 +44,8 @@ function loadSquareSdk(environment: string): Promise<void> {
 const pickupTimes = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM'];
 
 const lbl = {
-  en: { title: 'Checkout', subtitle: 'Pickup at our Tampa location', address: '3909 W Broad St, Tampa, FL 33614', details: 'Pickup Details', name: 'Your Name', namePh: 'María García', phone: 'Phone Number', phonePh: '(813) 555-0100', email: 'Email (optional)', emailPh: 'you@email.com', time: 'Pickup Time', asap: 'As soon as possible (20–30 mins)', payment: 'Payment Method', card: 'Pay by Card', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'Or pay with', selected: 'Selected', paymentUnavailable: 'Online payment is temporarily unavailable. Please check back soon.', applePaySafariOnly: 'Apple Pay appears in Safari on iPhone, iPad, or Mac with a card in Wallet.', useWalletCta: 'Tap the button above to complete your order.', preferDelivery: 'Prefer Delivery?', deliverySub: 'Order through our trusted delivery partners.', summary: 'Order Summary', item: 'Item', items: 'Items', qty: 'Qty', subtotal: 'Subtotal', pickupFee: 'Pickup Fee', free: 'Free', total: 'Total', place: 'Place Order', processing: 'Processing...', agreePre: 'By placing your order, you agree to our', termsOfService: 'Terms of Service', and: 'and', privacyPolicy: 'Privacy Policy', confirmed: 'Order Confirmed!', confirmedMsg: "Your order has been placed. We'll have it ready at your selected pickup time.", orderNum: 'Order #', newOrder: 'Place Another Order', emptyCart: 'Your cart is empty', emptyLink: 'Go back to menu', backToOrder: 'Back to Order', cardDetails: 'Card Details' },
-  es: { title: 'Pago', subtitle: 'Recogida en nuestra ubicación de Tampa', address: '3909 W Broad St, Tampa, FL 33614', details: 'Detalles de Recogida', name: 'Tu Nombre', namePh: 'María García', phone: 'Teléfono', phonePh: '(813) 555-0100', email: 'Correo (opcional)', emailPh: 'tu@correo.com', time: 'Hora de Recogida', asap: 'Lo antes posible (20–30 min)', payment: 'Método de Pago', card: 'Pagar con Tarjeta', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'O pagar con', selected: 'Seleccionado', paymentUnavailable: 'El pago en línea no está disponible en este momento. Vuelve a intentarlo más tarde.', applePaySafariOnly: 'Apple Pay aparece en Safari en iPhone, iPad o Mac con una tarjeta en Wallet.', useWalletCta: 'Toca el botón de arriba para completar tu pedido.', preferDelivery: '¿Prefieres Entrega?', deliverySub: 'Ordena a través de nuestros socios de entrega.', summary: 'Resumen del Pedido', item: 'Artículo', items: 'Artículos', qty: 'Cant.', subtotal: 'Subtotal', pickupFee: 'Tarifa de Recogida', free: 'Gratis', total: 'Total', place: 'Realizar Pedido', processing: 'Procesando...', agreePre: 'Al realizar tu pedido, aceptas nuestros', termsOfService: 'Términos de Servicio', and: 'y', privacyPolicy: 'Política de Privacidad', confirmed: '¡Pedido Confirmado!', confirmedMsg: 'Tu pedido ha sido enviado. Lo tendremos listo a tu hora de recogida.', orderNum: 'Pedido #', newOrder: 'Realizar Otro Pedido', emptyCart: 'Tu carrito está vacío', emptyLink: 'Volver al menú', backToOrder: 'Volver al Pedido', cardDetails: 'Datos de la Tarjeta' },
+  en: { title: 'Checkout', subtitle: 'Pickup at our Tampa location', address: '3909 W Broad St, Tampa, FL 33614', details: 'Pickup Details', name: 'Your Name', namePh: 'María García', phone: 'Phone Number', phonePh: '(813) 555-0100', email: 'Email (optional)', emailPh: 'you@email.com', time: 'Pickup Time', asap: 'As soon as possible (20–30 mins)', payment: 'Payment Method', card: 'Pay by Card', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'Or pay with', selected: 'Selected', paymentUnavailable: 'Online payment is temporarily unavailable. Please check back soon.', applePaySafariOnly: 'Apple Pay appears in Safari on iPhone, iPad, or Mac with a card in Wallet.', useWalletCta: 'Tap the button above to complete your order.', preferDelivery: 'Prefer Delivery?', deliverySub: 'Order through our trusted delivery partners.', summary: 'Order Summary', item: 'Item', items: 'Items', qty: 'Qty', subtotal: 'Subtotal', pickupFee: 'Pickup Fee', free: 'Free', total: 'Total', place: 'Place Order', processing: 'Processing...', agreePre: 'By placing your order, you agree to our', termsOfService: 'Terms of Service', and: 'and', privacyPolicy: 'Privacy Policy', confirmed: 'Payment Complete!', confirmedMsg: 'Your payment was verified successfully.', confirmedPreparing: "We're preparing your order now and will have it ready for pickup.", confirmedPickup: 'Pickup', orderNum: 'Order #', newOrder: 'Place Another Order', emptyCart: 'Your cart is empty', emptyLink: 'Go back to menu', backToOrder: 'Back to Order', cardDetails: 'Card Details' },
+  es: { title: 'Pago', subtitle: 'Recogida en nuestra ubicación de Tampa', address: '3909 W Broad St, Tampa, FL 33614', details: 'Detalles de Recogida', name: 'Tu Nombre', namePh: 'María García', phone: 'Teléfono', phonePh: '(813) 555-0100', email: 'Correo (opcional)', emailPh: 'tu@correo.com', time: 'Hora de Recogida', asap: 'Lo antes posible (20–30 min)', payment: 'Método de Pago', card: 'Pagar con Tarjeta', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'O pagar con', selected: 'Seleccionado', paymentUnavailable: 'El pago en línea no está disponible en este momento. Vuelve a intentarlo más tarde.', applePaySafariOnly: 'Apple Pay aparece en Safari en iPhone, iPad o Mac con una tarjeta en Wallet.', useWalletCta: 'Toca el botón de arriba para completar tu pedido.', preferDelivery: '¿Prefieres Entrega?', deliverySub: 'Ordena a través de nuestros socios de entrega.', summary: 'Resumen del Pedido', item: 'Artículo', items: 'Artículos', qty: 'Cant.', subtotal: 'Subtotal', pickupFee: 'Tarifa de Recogida', free: 'Gratis', total: 'Total', place: 'Realizar Pedido', processing: 'Procesando...', agreePre: 'Al realizar tu pedido, aceptas nuestros', termsOfService: 'Términos de Servicio', and: 'y', privacyPolicy: 'Política de Privacidad', confirmed: '¡Pago Completado!', confirmedMsg: 'Tu pago fue verificado exitosamente.', confirmedPreparing: 'Estamos preparando tu pedido y lo tendremos listo para recoger.', confirmedPickup: 'Recogida', orderNum: 'Pedido #', newOrder: 'Realizar Otro Pedido', emptyCart: 'Tu carrito está vacío', emptyLink: 'Volver al menú', backToOrder: 'Volver al Pedido', cardDetails: 'Datos de la Tarjeta' },
 };
 
 export default function CheckoutForm({ lang }: Props) {
@@ -59,6 +59,7 @@ export default function CheckoutForm({ lang }: Props) {
   const [pickupTime, setPickupTime] = useState('asap');
   const [processing, setProcessing] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState<number|null>(null);
+  const [confirmedPickupTime, setConfirmedPickupTime] = useState('');
   const [errors, setErrors] = useState<Record<string,string>>({});
   const [squareConfig, setSquareConfig] = useState<SquareConfig | null>(null);
   const [squareSdkReady, setSquareSdkReady] = useState(false);
@@ -253,6 +254,7 @@ export default function CheckoutForm({ lang }: Props) {
   };
 
   const completePaidOrder = async (orderId: number) => {
+    setConfirmedPickupTime(pickupTime === 'asap' ? t.asap : pickupTime);
     setConfirmedOrderId(orderId);
     clearCart();
   };
@@ -384,12 +386,20 @@ export default function CheckoutForm({ lang }: Props) {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="bg-white rounded-[var(--radius-box)] border border-[var(--hairline)] shadow-[var(--shadow-lift)] max-w-md w-full">
           <div className="text-center p-10">
-            <div className="grid place-items-center w-16 h-16 mx-auto mb-5 rounded-full bg-[var(--blush-soft)] text-primary">
+            <div className="grid place-items-center w-16 h-16 mx-auto mb-5 rounded-full bg-emerald-50 text-emerald-600">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
             <h2 className="font-serif text-3xl text-base-content mb-2">{t.confirmed}</h2>
-            <p className="text-base-content/60 mb-5">{t.confirmedMsg}</p>
-            <div className="pill text-sm py-2 px-5">{t.orderNum}{confirmedOrderId}</div>
+            <p className="text-base-content/70 mb-2">{t.confirmedMsg}</p>
+            <p className="text-base-content/60 mb-6">{t.confirmedPreparing}</p>
+            <div className="space-y-2">
+              <div className="pill text-sm py-2 px-5">{t.orderNum}{confirmedOrderId}</div>
+              {confirmedPickupTime && (
+                <div className="text-sm text-base-content/60">
+                  <span className="font-semibold text-base-content/80">{t.confirmedPickup}:</span> {confirmedPickupTime}
+                </div>
+              )}
+            </div>
             <div className="mt-8">
               <a href="/order" className="btn btn-cta w-full">{t.newOrder}</a>
             </div>

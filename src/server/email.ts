@@ -304,7 +304,7 @@ export async function notifyOrderConfirmation(
 
   const body =
     `<p style="font-family:system-ui,sans-serif">Hi ${esc(order.customerName || "there")},</p>
-     <p style="font-family:system-ui,sans-serif">Thank you for your order! We'll have it ready for pickup.</p>
+     <p style="font-family:system-ui,sans-serif">${opts?.paid ? "Your payment was verified successfully. We're preparing your order now and will have it ready for pickup." : "Thank you for your order! We'll have it ready for pickup."}</p>
      ${wrap("Order summary", row("Order", label) + row("Pickup", order.pickupTime) + row("Payment", order.paymentMethod) + row("Status", opts?.paid ? "Paid online" : "Pay at pickup") + row("Total", formatCents(totalCents)) + (itemsHtml ? `<tr><td colspan="2"><ul style="margin:8px 0 0;padding-left:18px">${itemsHtml}</ul></td></tr>` : ""))}
      <p style="font-family:system-ui,sans-serif;color:#666">— Pavlova Love Tampa<br>3909 W Broad St, Tampa, FL 33614</p>`;
 
