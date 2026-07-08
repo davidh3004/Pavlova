@@ -25,11 +25,10 @@ export const POST: APIRoute = ({ request }) =>
             .map((i) => `${i.quantity}x ${i.name}`)
             .join(", ");
           paymentNote = [
-            `Order ${fullOrder.orderNumber || `#${orderId}`}`,
+            items || null,
+            fullOrder.pickupTime ? `Pickup: ${fullOrder.pickupTime}` : null,
             fullOrder.customerName,
             fullOrder.customerPhone,
-            fullOrder.pickupTime ? `Pickup: ${fullOrder.pickupTime}` : null,
-            items ? `Items: ${items}` : null,
           ]
             .filter(Boolean)
             .join(" | ")
@@ -42,7 +41,7 @@ export const POST: APIRoute = ({ request }) =>
         idempotencyKey: randomUUID(),
         amountMoney: { amount: BigInt(amountMoney), currency },
         locationId: getSquareLocationId(),
-        note: paymentNote ?? `Pavlova Love Order${orderId ? ` #${orderId}` : ""}`,
+        note: paymentNote ?? undefined,
         buyerEmailAddress: customerEmail,
         ...(customerName
           ? {
