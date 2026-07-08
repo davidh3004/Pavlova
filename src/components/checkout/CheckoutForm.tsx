@@ -44,8 +44,8 @@ function loadSquareSdk(environment: string): Promise<void> {
 const pickupTimes = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM'];
 
 const lbl = {
-  en: { title: 'Checkout', subtitle: 'Pickup at our Tampa location', address: '3909 W Broad St, Tampa, FL 33614', details: 'Pickup Details', name: 'Your Name', namePh: 'María García', phone: 'Phone Number', phonePh: '(813) 555-0100', email: 'Email (optional)', emailPh: 'you@email.com', time: 'Pickup Time', asap: 'As soon as possible (20–30 mins)', payment: 'Payment Method', card: 'Pay by Card', applepay: 'Apple Pay', googlepay: 'Google Pay', selected: 'Selected', paymentUnavailable: 'Online payment is temporarily unavailable. Please check back soon.', useWalletCta: 'Tap the button above to complete your order.', preferDelivery: 'Prefer Delivery?', deliverySub: 'Order through our trusted delivery partners.', summary: 'Order Summary', item: 'Item', items: 'Items', qty: 'Qty', subtotal: 'Subtotal', pickupFee: 'Pickup Fee', free: 'Free', total: 'Total', place: 'Place Order', processing: 'Processing...', agreePre: 'By placing your order, you agree to our', termsOfService: 'Terms of Service', and: 'and', privacyPolicy: 'Privacy Policy', confirmed: 'Order Confirmed!', confirmedMsg: "Your order has been placed. We'll have it ready at your selected pickup time.", orderNum: 'Order #', newOrder: 'Place Another Order', emptyCart: 'Your cart is empty', emptyLink: 'Go back to menu', backToOrder: 'Back to Order', cardDetails: 'Card Details' },
-  es: { title: 'Pago', subtitle: 'Recogida en nuestra ubicación de Tampa', address: '3909 W Broad St, Tampa, FL 33614', details: 'Detalles de Recogida', name: 'Tu Nombre', namePh: 'María García', phone: 'Teléfono', phonePh: '(813) 555-0100', email: 'Correo (opcional)', emailPh: 'tu@correo.com', time: 'Hora de Recogida', asap: 'Lo antes posible (20–30 min)', payment: 'Método de Pago', card: 'Pagar con Tarjeta', applepay: 'Apple Pay', googlepay: 'Google Pay', selected: 'Seleccionado', paymentUnavailable: 'El pago en línea no está disponible en este momento. Vuelve a intentarlo más tarde.', useWalletCta: 'Toca el botón de arriba para completar tu pedido.', preferDelivery: '¿Prefieres Entrega?', deliverySub: 'Ordena a través de nuestros socios de entrega.', summary: 'Resumen del Pedido', item: 'Artículo', items: 'Artículos', qty: 'Cant.', subtotal: 'Subtotal', pickupFee: 'Tarifa de Recogida', free: 'Gratis', total: 'Total', place: 'Realizar Pedido', processing: 'Procesando...', agreePre: 'Al realizar tu pedido, aceptas nuestros', termsOfService: 'Términos de Servicio', and: 'y', privacyPolicy: 'Política de Privacidad', confirmed: '¡Pedido Confirmado!', confirmedMsg: 'Tu pedido ha sido enviado. Lo tendremos listo a tu hora de recogida.', orderNum: 'Pedido #', newOrder: 'Realizar Otro Pedido', emptyCart: 'Tu carrito está vacío', emptyLink: 'Volver al menú', backToOrder: 'Volver al Pedido', cardDetails: 'Datos de la Tarjeta' },
+  en: { title: 'Checkout', subtitle: 'Pickup at our Tampa location', address: '3909 W Broad St, Tampa, FL 33614', details: 'Pickup Details', name: 'Your Name', namePh: 'María García', phone: 'Phone Number', phonePh: '(813) 555-0100', email: 'Email (optional)', emailPh: 'you@email.com', time: 'Pickup Time', asap: 'As soon as possible (20–30 mins)', payment: 'Payment Method', card: 'Pay by Card', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'Or pay with', selected: 'Selected', paymentUnavailable: 'Online payment is temporarily unavailable. Please check back soon.', applePaySafariOnly: 'Apple Pay appears in Safari on iPhone, iPad, or Mac with a card in Wallet.', useWalletCta: 'Tap the button above to complete your order.', preferDelivery: 'Prefer Delivery?', deliverySub: 'Order through our trusted delivery partners.', summary: 'Order Summary', item: 'Item', items: 'Items', qty: 'Qty', subtotal: 'Subtotal', pickupFee: 'Pickup Fee', free: 'Free', total: 'Total', place: 'Place Order', processing: 'Processing...', agreePre: 'By placing your order, you agree to our', termsOfService: 'Terms of Service', and: 'and', privacyPolicy: 'Privacy Policy', confirmed: 'Order Confirmed!', confirmedMsg: "Your order has been placed. We'll have it ready at your selected pickup time.", orderNum: 'Order #', newOrder: 'Place Another Order', emptyCart: 'Your cart is empty', emptyLink: 'Go back to menu', backToOrder: 'Back to Order', cardDetails: 'Card Details' },
+  es: { title: 'Pago', subtitle: 'Recogida en nuestra ubicación de Tampa', address: '3909 W Broad St, Tampa, FL 33614', details: 'Detalles de Recogida', name: 'Tu Nombre', namePh: 'María García', phone: 'Teléfono', phonePh: '(813) 555-0100', email: 'Correo (opcional)', emailPh: 'tu@correo.com', time: 'Hora de Recogida', asap: 'Lo antes posible (20–30 min)', payment: 'Método de Pago', card: 'Pagar con Tarjeta', applepay: 'Apple Pay', googlepay: 'Google Pay', orPayWith: 'O pagar con', selected: 'Seleccionado', paymentUnavailable: 'El pago en línea no está disponible en este momento. Vuelve a intentarlo más tarde.', applePaySafariOnly: 'Apple Pay aparece en Safari en iPhone, iPad o Mac con una tarjeta en Wallet.', useWalletCta: 'Toca el botón de arriba para completar tu pedido.', preferDelivery: '¿Prefieres Entrega?', deliverySub: 'Ordena a través de nuestros socios de entrega.', summary: 'Resumen del Pedido', item: 'Artículo', items: 'Artículos', qty: 'Cant.', subtotal: 'Subtotal', pickupFee: 'Tarifa de Recogida', free: 'Gratis', total: 'Total', place: 'Realizar Pedido', processing: 'Procesando...', agreePre: 'Al realizar tu pedido, aceptas nuestros', termsOfService: 'Términos de Servicio', and: 'y', privacyPolicy: 'Política de Privacidad', confirmed: '¡Pedido Confirmado!', confirmedMsg: 'Tu pedido ha sido enviado. Lo tendremos listo a tu hora de recogida.', orderNum: 'Pedido #', newOrder: 'Realizar Otro Pedido', emptyCart: 'Tu carrito está vacío', emptyLink: 'Volver al menú', backToOrder: 'Volver al Pedido', cardDetails: 'Datos de la Tarjeta' },
 };
 
 export default function CheckoutForm({ lang }: Props) {
@@ -57,7 +57,6 @@ export default function CheckoutForm({ lang }: Props) {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [pickupTime, setPickupTime] = useState('asap');
-  const [payMethod, setPayMethod] = useState<'card'|'applepay'|'googlepay'>('card');
   const [processing, setProcessing] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState<number|null>(null);
   const [errors, setErrors] = useState<Record<string,string>>({});
@@ -66,12 +65,14 @@ export default function CheckoutForm({ lang }: Props) {
   const [paymentsReady, setPaymentsReady] = useState(false);
   const [applePayAvailable, setApplePayAvailable] = useState(false);
   const [googlePayAvailable, setGooglePayAvailable] = useState(false);
+  const [walletsProbed, setWalletsProbed] = useState(false);
 
   const cardRef = useRef<any>(null);
   const applePayRef = useRef<any>(null);
   const googlePayRef = useRef<any>(null);
   const paymentsRef = useRef<any>(null);
-  const placeOrderRef = useRef<() => void>(() => {});
+  const paymentRequestRef = useRef<any>(null);
+  const walletPayRef = useRef<(method: 'applepay' | 'googlepay', instance: any) => void>(() => {});
 
   // Load Square config at runtime from the server (reads Vercel env vars on each request).
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function CheckoutForm({ lang }: Props) {
   }, [squareConfig?.configured, squareSdkReady, squareConfig?.applicationId, squareConfig?.locationId]);
 
   useEffect(() => {
-    if (payMethod !== 'card' || !paymentsReady) return;
+    if (!paymentsReady) return;
 
     const payments = paymentsRef.current;
     let cancelled = false;
@@ -149,37 +150,50 @@ export default function CheckoutForm({ lang }: Props) {
       try { (localCard ?? cardRef.current)?.destroy?.(); } catch {}
       cardRef.current = null;
     };
-  }, [payMethod, paymentsReady]);
+  }, [paymentsReady]);
 
-  // Apple Pay / Google Pay availability depends on the browser/device, so we
-  // probe both as soon as the Square client is ready and only show each as a
-  // selectable option once its promise resolves (Square's SDK rejects when
-  // the wallet isn't supported — e.g. Google Pay in Safari, Apple Pay outside it).
+  // Apple Pay / Google Pay: init once, then update the amount when the cart changes.
   useEffect(() => {
-    if (!paymentsReady) return;
+    if (!paymentsReady || total <= 0) return;
     const payments = paymentsRef.current;
     let cancelled = false;
-    const paymentRequest = payments.paymentRequest({
-      countryCode: 'US',
-      currencyCode: 'USD',
-      total: { amount: (total / 100).toFixed(2), label: 'Pavlova Love Tampa' },
-    });
 
-    payments.applePay(paymentRequest)
-      .then((applePay: any) => {
-        if (cancelled) { applePay.destroy?.().catch(() => {}); return; }
-        applePayRef.current = applePay;
-        setApplePayAvailable(true);
-      })
-      .catch(() => { if (!cancelled) setApplePayAvailable(false); });
+    const initWallets = async () => {
+      try {
+        const paymentRequest = payments.paymentRequest({
+          countryCode: 'US',
+          currencyCode: 'USD',
+          total: { amount: (total / 100).toFixed(2), label: 'Pavlova Love Tampa' },
+        });
+        paymentRequestRef.current = paymentRequest;
 
-    payments.googlePay(paymentRequest)
-      .then((googlePay: any) => {
-        if (cancelled) { googlePay.destroy?.().catch(() => {}); return; }
-        googlePayRef.current = googlePay;
-        setGooglePayAvailable(true);
-      })
-      .catch(() => { if (!cancelled) setGooglePayAvailable(false); });
+        try {
+          const applePay = await payments.applePay(paymentRequest);
+          if (cancelled) { applePay.destroy?.().catch(() => {}); return; }
+          applePayRef.current = applePay;
+          setApplePayAvailable(true);
+        } catch (e) {
+          console.error('Apple Pay unavailable:', e);
+          if (!cancelled) setApplePayAvailable(false);
+        }
+
+        try {
+          const googlePay = await payments.googlePay(paymentRequest);
+          if (cancelled) { googlePay.destroy?.().catch(() => {}); return; }
+          googlePayRef.current = googlePay;
+          setGooglePayAvailable(true);
+        } catch (e) {
+          console.error('Google Pay unavailable:', e);
+          if (!cancelled) setGooglePayAvailable(false);
+        }
+      } catch (e) {
+        console.error('Digital wallet init failed:', e);
+      } finally {
+        if (!cancelled) setWalletsProbed(true);
+      }
+    };
+
+    initWallets();
 
     return () => {
       cancelled = true;
@@ -187,29 +201,44 @@ export default function CheckoutForm({ lang }: Props) {
       googlePayRef.current?.destroy?.().catch(() => {});
       applePayRef.current = null;
       googlePayRef.current = null;
+      paymentRequestRef.current = null;
       setApplePayAvailable(false);
       setGooglePayAvailable(false);
+      setWalletsProbed(false);
     };
-  }, [paymentsReady, total]);
+  }, [paymentsReady, total > 0]);
 
-  // Google Pay renders its own branded button into the container — attach it
-  // when selected and forward clicks to the latest placeOrder via a ref (the
-  // button element isn't ours, so we can't just pass a JSX onClick).
   useEffect(() => {
-    if (payMethod !== 'googlepay' || !googlePayAvailable || !googlePayRef.current) return;
+    const paymentRequest = paymentRequestRef.current;
+    if (!paymentRequest || total <= 0) return;
+    try {
+      paymentRequest.update({
+        total: { amount: (total / 100).toFixed(2), label: 'Pavlova Love Tampa' },
+      });
+    } catch (e) {
+      console.error('Payment request update failed:', e);
+    }
+  }, [total]);
+
+  // Google Pay renders its own branded button — attach when available.
+  useEffect(() => {
+    if (!googlePayAvailable || !googlePayRef.current) return;
     const googlePay = googlePayRef.current;
     const container = document.getElementById('google-pay-button');
     if (!container) return;
     container.innerHTML = '';
     googlePay.attach('#google-pay-button').catch((e: any) => console.error('Google Pay attach failed', e));
-    const onClick = () => placeOrderRef.current?.();
+    const onClick = (event: Event) => {
+      event.preventDefault();
+      walletPayRef.current('googlepay', googlePayRef.current);
+    };
     container.addEventListener('click', onClick);
 
     return () => {
       container.removeEventListener('click', onClick);
       googlePay.detach?.('#google-pay-button')?.catch?.(() => {});
     };
-  }, [payMethod, googlePayAvailable]);
+  }, [googlePayAvailable]);
 
   const fmtPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
   const finalTotal = total;
@@ -223,82 +252,77 @@ export default function CheckoutForm({ lang }: Props) {
     return Object.keys(e).length === 0;
   };
 
-  const placeOrder = async () => {
+  const completePaidOrder = async (orderId: number) => {
+    setConfirmedOrderId(orderId);
+    clearCart();
+  };
+
+  const chargeOrder = async (orderId: number, token: string) => {
+    const payRes = await fetch('/api/square/payments/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sourceId: token,
+        orderId,
+        amount: finalTotal / 100,
+        customerName: name,
+        customerEmail: email.trim() || undefined,
+      }),
+    });
+    if (!payRes.ok) {
+      const data = await payRes.json().catch(() => null);
+      const detail = data?.errors?.[0]?.detail || data?.error;
+      throw new Error(detail || (lang === 'es' ? 'Pago rechazado.' : 'Payment was declined.'));
+    }
+  };
+
+  const createOrder = async (paymentMethod: string) => {
+    const orderRes = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: email.trim() || null,
+        pickupTime: pickupTime === 'asap' ? t.asap : pickupTime,
+        paymentMethod,
+        items: items.map((i) => ({
+          productId: i.productId,
+          name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+          specialInstructions: i.specialInstructions,
+        })),
+        totalAmount: finalTotal,
+      }),
+    });
+    if (!orderRes.ok) throw new Error('Order failed');
+    return orderRes.json();
+  };
+
+  // Apple Pay / Google Pay must call tokenize() immediately on click — before any API calls.
+  const payWithWallet = async (method: 'applepay' | 'googlepay', paymentInstance: any) => {
+    if (!paymentInstance || processing) return;
     if (!validate()) return;
     setProcessing(true);
     try {
-      // Create order
-      const orderRes = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName: name,
-          customerPhone: phone,
-          customerEmail: email.trim() || null,
-          pickupTime: pickupTime === 'asap' ? t.asap : pickupTime,
-          paymentMethod: payMethod,
-          items: items.map((i) => ({
-            productId: i.productId,
-            name: i.name,
-            price: i.price,
-            quantity: i.quantity,
-            specialInstructions: i.specialInstructions,
-          })),
-          totalAmount: finalTotal,
-        }),
-      });
-
-      if (!orderRes.ok) throw new Error('Order failed');
-      const order = await orderRes.json();
-
-      // Tokenize with whichever payment method is selected, then charge via Square.
-      // The card / Apple Pay / Google Pay instances all expose the same tokenize()
-      // shape, so one code path handles all of them.
-      const paymentInstance =
-        payMethod === 'card' ? cardRef.current :
-        payMethod === 'applepay' ? applePayRef.current :
-        payMethod === 'googlepay' ? googlePayRef.current : null;
-
-      if (paymentInstance) {
-        let tokenResult: any;
-        try {
-          tokenResult = await paymentInstance.tokenize();
-        } catch {
-          // Square's request to its PCI endpoint never resolved — almost always
-          // an ad-blocker / privacy extension blocking pci-connect.squareup(sandbox).com.
-          throw new Error(lang === 'es'
-            ? 'No se pudo procesar el pago. Desactiva tu bloqueador de anuncios para este sitio e inténtalo de nuevo.'
-            : 'Could not reach the payment processor. Disable your ad/privacy blocker for this site and try again.');
-        }
-        // The buyer closed the Apple Pay / Google Pay sheet without confirming —
-        // not an error, just let them try again.
-        if (tokenResult.status === 'CANCEL') return;
-        if (tokenResult.status !== 'OK') {
-          const detail = tokenResult.errors?.[0]?.message;
-          throw new Error(detail || (lang === 'es' ? 'No se pudo validar el pago.' : 'Payment could not be validated.'));
-        }
-
-        // API expects dollars (decimalToSquareMoney × 100); finalTotal is cents → divide
-        const payRes = await fetch('/api/square/payments/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sourceId: tokenResult.token,
-            orderId: order.id,
-            amount: finalTotal / 100,
-            customerName: name,
-            customerEmail: email.trim() || undefined,
-          }),
-        });
-        if (!payRes.ok) {
-          const data = await payRes.json().catch(() => null);
-          const detail = data?.errors?.[0]?.detail || data?.error;
-          throw new Error(detail || (lang === 'es' ? 'Pago rechazado.' : 'Payment was declined.'));
-        }
+      let tokenResult: any;
+      try {
+        tokenResult = await paymentInstance.tokenize();
+      } catch {
+        throw new Error(lang === 'es'
+          ? 'No se pudo procesar el pago. Desactiva tu bloqueador de anuncios para este sitio e inténtalo de nuevo.'
+          : 'Could not reach the payment processor. Disable your ad/privacy blocker for this site and try again.');
+      }
+      if (tokenResult.status === 'CANCEL') return;
+      if (tokenResult.status !== 'OK') {
+        const detail = tokenResult.errors?.[0]?.message;
+        throw new Error(detail || (lang === 'es' ? 'No se pudo validar el pago.' : 'Payment could not be validated.'));
       }
 
-      setConfirmedOrderId(order.id);
-      clearCart();
+      const order = await createOrder(method);
+      await chargeOrder(order.id, tokenResult.token);
+      await completePaidOrder(order.id);
     } catch (e: any) {
       setErrors({ submit: e.message || (lang === 'es' ? 'Error al procesar el pedido.' : 'Failed to process order.') });
     } finally {
@@ -306,7 +330,40 @@ export default function CheckoutForm({ lang }: Props) {
     }
   };
 
-  useEffect(() => { placeOrderRef.current = placeOrder; });
+  const placeOrder = async () => {
+    if (!validate()) return;
+    setProcessing(true);
+    try {
+      const order = await createOrder('card');
+
+      const paymentInstance = cardRef.current;
+      if (paymentInstance) {
+        let tokenResult: any;
+        try {
+          tokenResult = await paymentInstance.tokenize();
+        } catch {
+          throw new Error(lang === 'es'
+            ? 'No se pudo procesar el pago. Desactiva tu bloqueador de anuncios para este sitio e inténtalo de nuevo.'
+            : 'Could not reach the payment processor. Disable your ad/privacy blocker for this site and try again.');
+        }
+        if (tokenResult.status === 'CANCEL') return;
+        if (tokenResult.status !== 'OK') {
+          const detail = tokenResult.errors?.[0]?.message;
+          throw new Error(detail || (lang === 'es' ? 'No se pudo validar el pago.' : 'Payment could not be validated.'));
+        }
+
+        await chargeOrder(order.id, tokenResult.token);
+      }
+
+      await completePaidOrder(order.id);
+    } catch (e: any) {
+      setErrors({ submit: e.message || (lang === 'es' ? 'Error al procesar el pedido.' : 'Failed to process order.') });
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  useEffect(() => { walletPayRef.current = payWithWallet; });
 
   if (items.length === 0 && !confirmedOrderId) {
     return (
@@ -413,57 +470,48 @@ export default function CheckoutForm({ lang }: Props) {
 
             <div className="space-y-3">
               {squareConfig?.configured && (
-                <>
-                  <label className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 cursor-pointer transition-colors ${payMethod === 'card' ? 'border-[var(--cta)] bg-[var(--cta)]/[0.04]' : 'border-[var(--hairline)] hover:border-[var(--cta)]/40'}`}>
-                    <input type="radio" className="h-4 w-4 accent-[var(--cta)]" checked={payMethod === 'card'} onChange={() => setPayMethod('card')} />
-                    <span className="text-base leading-none">💳</span>
-                    <span className="flex-1 font-semibold text-sm text-base-content">{t.card}</span>
-                    {payMethod === 'card' && <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)]">{t.selected}</span>}
-                  </label>
-                  {applePayAvailable && (
-                    <label className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 cursor-pointer transition-colors ${payMethod === 'applepay' ? 'border-[var(--cta)] bg-[var(--cta)]/[0.04]' : 'border-[var(--hairline)] hover:border-[var(--cta)]/40'}`}>
-                      <input type="radio" className="h-4 w-4 accent-[var(--cta)]" checked={payMethod === 'applepay'} onChange={() => setPayMethod('applepay')} />
-                      <span className="text-base leading-none">🍎</span>
-                      <span className="flex-1 font-semibold text-sm text-base-content">{t.applepay}</span>
-                      {payMethod === 'applepay' && <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)]">{t.selected}</span>}
-                    </label>
-                  )}
-                  {googlePayAvailable && (
-                    <label className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 cursor-pointer transition-colors ${payMethod === 'googlepay' ? 'border-[var(--cta)] bg-[var(--cta)]/[0.04]' : 'border-[var(--hairline)] hover:border-[var(--cta)]/40'}`}>
-                      <input type="radio" className="h-4 w-4 accent-[var(--cta)]" checked={payMethod === 'googlepay'} onChange={() => setPayMethod('googlepay')} />
-                      <span className="text-base leading-none">📱</span>
-                      <span className="flex-1 font-semibold text-sm text-base-content">{t.googlepay}</span>
-                      {payMethod === 'googlepay' && <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[var(--cta)]">{t.selected}</span>}
-                    </label>
-                  )}
-                </>
+                <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border-2 border-[var(--cta)] bg-[var(--cta)]/[0.04]">
+                  <span className="text-base leading-none">💳</span>
+                  <span className="flex-1 font-semibold text-sm text-base-content">{t.card}</span>
+                </div>
               )}
               {squareConfig && !squareConfig.configured && (
                 <p className="text-xs text-base-content/45 italic">{t.paymentUnavailable}</p>
               )}
             </div>
 
-            {payMethod === 'card' && squareConfig?.configured ? (
+            {squareConfig?.configured ? (
               <div className="mt-4">
                 <p className="text-sm font-medium mb-3">{t.cardDetails}</p>
                 <div id="square-card-container" className="min-h-[80px] rounded-xl border border-[var(--hairline)] p-3"></div>
               </div>
-            ) : payMethod === 'applepay' && applePayAvailable ? (
-              <div className="mt-4">
-                <button
-                  type="button"
-                  id="apple-pay-button"
-                  aria-label="Apple Pay"
-                  onClick={placeOrder}
-                  disabled={processing}
-                  className="apple-pay-button"
-                />
-              </div>
-            ) : payMethod === 'googlepay' && googlePayAvailable ? (
-              <div className="mt-4">
-                <div id="google-pay-button" className="min-h-[48px]"></div>
-              </div>
             ) : null}
+
+            {(applePayAvailable || googlePayAvailable) && (
+              <div className="mt-6 space-y-3">
+                <p className="text-[0.6rem] font-bold tracking-[0.18em] uppercase text-base-content/45 text-center">{t.orPayWith}</p>
+                {applePayAvailable && (
+                  <button
+                    type="button"
+                    id="apple-pay-button"
+                    aria-label="Apple Pay"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      walletPayRef.current('applepay', applePayRef.current);
+                    }}
+                    disabled={processing}
+                    className="apple-pay-button"
+                  />
+                )}
+                {googlePayAvailable && (
+                  <div id="google-pay-button" className="min-h-[48px]"></div>
+                )}
+              </div>
+            )}
+
+            {walletsProbed && !applePayAvailable && !googlePayAvailable && squareConfig?.configured && (
+              <p className="mt-4 text-xs text-base-content/45 italic">{t.applePaySafariOnly}</p>
+            )}
 
             <hr className="border-0 border-t border-[var(--hairline)] my-9" />
 
@@ -530,20 +578,14 @@ export default function CheckoutForm({ lang }: Props) {
                 </div>
               )}
 
-              {payMethod === 'applepay' || payMethod === 'googlepay' ? (
-                <p className="mt-7 text-center text-xs text-base-content/50">
-                  {processing ? t.processing : t.useWalletCta}
-                </p>
-              ) : (
-                <button
-                  className="w-full mt-7 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--cta)] text-white text-[0.72rem] font-bold tracking-[0.2em] uppercase py-4 hover:bg-[var(--cta-hover)] disabled:opacity-60 transition-colors"
-                  onClick={placeOrder}
-                  disabled={processing || !squareConfig?.configured}
-                >
-                  {processing && <span className="loading loading-spinner loading-sm"></span>}
-                  {processing ? t.processing : t.place}
-                </button>
-              )}
+              <button
+                className="w-full mt-7 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--cta)] text-white text-[0.72rem] font-bold tracking-[0.2em] uppercase py-4 hover:bg-[var(--cta-hover)] disabled:opacity-60 transition-colors"
+                onClick={placeOrder}
+                disabled={processing || !squareConfig?.configured}
+              >
+                {processing && <span className="loading loading-spinner loading-sm"></span>}
+                {processing ? t.processing : t.place}
+              </button>
             </div>
           </div>
         </div>
