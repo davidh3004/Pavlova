@@ -4,6 +4,7 @@ interface OrderItem { id: number; name: string; quantity: number; price: number;
 interface Order {
   id: number; customerName: string; customerPhone: string; pickupTime: string;
   totalAmount: number; status: string; paymentMethod: string;
+  squareOrderId?: string | null;
   promoCode?: string | null; discount?: number | string;
   createdAt: string; items?: OrderItem[];
 }
@@ -110,6 +111,12 @@ export default function AdminOrders() {
                 <div><span className="text-base-content/50">Phone</span><p className="font-medium">{selected.customerPhone}</p></div>
                 <div><span className="text-base-content/50">Pickup Time</span><p className="font-medium">{selected.pickupTime}</p></div>
                 <div><span className="text-base-content/50">Payment</span><p className="font-medium">{formatPaymentMethod(selected.paymentMethod)}</p></div>
+                {selected.squareOrderId && (
+                  <div className="col-span-2">
+                    <span className="text-base-content/50">Square Order</span>
+                    <p className="font-mono text-xs break-all">{selected.squareOrderId}</p>
+                  </div>
+                )}
               </div>
               {selected.items && selected.items.length > 0 && (
                 <div>

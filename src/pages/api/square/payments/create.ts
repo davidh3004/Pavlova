@@ -6,6 +6,7 @@ import { getSquareClient, getSquareLocationId, decimalToSquareMoney } from "@/se
 import { getOrderWithItems } from "@/server/orders";
 import { notifyNewOrder, notifyOrderConfirmation, sendEmailSafe } from "@/server/email";
 import { notifyOrderSmsConfirmation, sendSmsSafe } from "@/server/sms";
+import { createSquareOrder, paySquareOrder } from "@/server/squareOrders";
 
 export const POST: APIRoute = ({ request }) =>
   run(async () => {
@@ -13,36 +14,38 @@ export const POST: APIRoute = ({ request }) =>
     if (!client) return error("Square payments not configured", 503);
 
     const body = await readBody(request);
-    const { sourceId, amount, currency = "USD", orderId, customerEmail, customerName, note } = body;
+    const { sourceId, amount, currency = "USD", orderId, customerEmail, customerName } = body;
     if (!sourceId || !amount) return error("sourceId and amount are required");
+    if (!orderId) return error("orderId is required");
 
     try {
-      const amountMoney = decimalToSquareMoney(amount);
-      let paymentNote = note as string | undefined;
-      if (!paymentNote && orderId) {
-        const fullOrder = await getOrderWithItems(Number(orderId));
-        if (fullOrder) {
-          const items = (fullOrder.items ?? [])
-            .map((i) => `${i.quantity}x ${i.name}`)
-            .join(", ");
-          paymentNote = [
-            items || null,
-            fullOrder.pickupTime ? `Pickup: ${fullOrder.pickupTime}` : null,
-            fullOrder.customerName,
-            fullOrder.customerPhone,
-          ]
-            .filter(Boolean)
-            .join(" | ")
-            .slice(0, 500);
-        }
+      const websiteOrderId = Number(orderId);
+      let fullOrder = await getOrderWithItems(websiteOrderId);
+      if (!fullOrder) return error("Order not found", 404);
+
+      const orderForSquare = fullOrder as Parameters<typeof createSquareOrder>[1];
+
+      // Create a Square Order (or reuse one from a prior attempt) so staff see line items in POS.
+      let squareOrderId = fullOrder.squareOrderId as string | undefined;
+      if (!squareOrderId) {
+        squareOrderId = await createSquareOrder(client, orderForSquare);
+        await update(COL.orders, websiteOrderId, { squareOrderId });
+        fullOrder = { ...fullOrder, squareOrderId };
       }
+
+      const squareOrderRes = await client.orders.get({ orderId: squareOrderId });
+      const squareTotal = squareOrderRes.order?.totalMoney?.amount;
+      const amountMoney = squareTotal != null
+        ? Number(squareTotal)
+        : decimalToSquareMoney(amount);
 
       const response = await client.payments.create({
         sourceId,
         idempotencyKey: randomUUID(),
+        orderId: squareOrderId,
         amountMoney: { amount: BigInt(amountMoney), currency },
         locationId: getSquareLocationId(),
-        note: paymentNote ?? undefined,
+        autocomplete: true,
         buyerEmailAddress: customerEmail,
         ...(customerName
           ? {
@@ -57,24 +60,35 @@ export const POST: APIRoute = ({ request }) =>
       if (response.errors?.length) return json({ errors: response.errors }, 402);
 
       const payment = response.payment!;
-      if (orderId) {
-        await update(COL.orders, Number(orderId), { status: "confirmed" });
-        const fullOrder = await getOrderWithItems(Number(orderId));
-        if (fullOrder) {
-          sendEmailSafe(async () => {
-            await notifyNewOrder(fullOrder, { paid: true });
-            await notifyOrderConfirmation(fullOrder, { paid: true });
-          });
-          sendSmsSafe(() => notifyOrderSmsConfirmation(fullOrder));
+      if (payment.id) {
+        try {
+          await paySquareOrder(client, squareOrderId, payment.id);
+        } catch (payErr) {
+          console.error("[square] PayOrder after payment:", payErr);
         }
+      }
+
+      await update(COL.orders, websiteOrderId, {
+        status: "confirmed",
+        squareOrderId,
+        squarePaymentId: payment.id ?? null,
+      });
+
+      fullOrder = await getOrderWithItems(websiteOrderId);
+      if (fullOrder) {
+        const notifyOrder = fullOrder as Parameters<typeof notifyNewOrder>[0];
+        sendEmailSafe(async () => {
+          await notifyNewOrder(notifyOrder, { paid: true });
+          await notifyOrderConfirmation(notifyOrder, { paid: true });
+        });
+        sendSmsSafe(() => notifyOrderSmsConfirmation(notifyOrder));
       }
 
       return json({
         paymentId: payment.id,
+        squareOrderId,
         status: payment.status,
         receiptUrl: payment.receiptUrl,
-        // Square returns money amounts as BigInt, which JSON.stringify cannot
-        // serialize — coerce to a Number (cents) before sending.
         amountMoney: payment.amountMoney
           ? { amount: Number(payment.amountMoney.amount), currency: payment.amountMoney.currency }
           : null,
