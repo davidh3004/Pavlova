@@ -224,12 +224,7 @@
     "message": "Message",
     "send": "Send Message",
     "sending": "Sending...",
-    "success": "Message sent! We'll get back to you soon.",
-    "hoursDetail": {
-      "weekday": "Mon – Fri: 7:30 am – 5:30 pm",
-      "saturday": "Saturday: 7:00 am – 7:00 pm",
-      "sunday": "Sunday: 8:00 am – 3:00 pm"
-    }
+    "success": "Message sent! We'll get back to you soon."
   },
   "reviews": {
     "title": "Customer Reviews",
