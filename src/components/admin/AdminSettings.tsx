@@ -27,9 +27,23 @@ function EmailStatus() {
   );
 }
 
+type DayKey = 'monday'|'tuesday'|'wednesday'|'thursday'|'friday'|'saturday'|'sunday';
+interface DayHours { closed: boolean; open: string; close: string; }
+type BusinessHours = Record<DayKey, DayHours>;
+
+const DAY_ORDER: DayKey[] = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+const DAY_LABELS: Record<DayKey, string> = { monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday' };
+
+const DEFAULT_HOURS: BusinessHours = DAY_ORDER.reduce((acc, day) => {
+  acc[day] = day === 'saturday' || day === 'sunday'
+    ? { closed: true, open: '09:00', close: '17:00' }
+    : { closed: false, open: '07:30', close: '17:30' };
+  return acc;
+}, {} as BusinessHours);
+
 interface Settings {
   businessName?: string; phone?: string; email?: string; address?: string;
-  hoursWeekday?: string; hoursSaturday?: string; hoursSunday?: string;
+  businessHours?: BusinessHours;
   instagramUrl?: string; facebookUrl?: string; whatsappNumber?: string;
   bakesyUrl?: string; googleMapsUrl?: string;
   metaTitle?: string; metaDescription?: string;
@@ -46,7 +60,9 @@ export default function AdminSettings() {
   const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
-    fetch('/api/admin/settings').then(r => r.ok ? r.json() : {}).then(setSettings).finally(() => setLoading(false));
+    fetch('/api/admin/settings').then(r => r.ok ? r.json() : {}).then((s: Settings) => {
+      setSettings({ ...s, businessHours: { ...DEFAULT_HOURS, ...s.businessHours } });
+    }).finally(() => setLoading(false));
   }, []);
 
   const save = async () => {
@@ -66,6 +82,15 @@ export default function AdminSettings() {
   };
 
   const f = (k: keyof Settings, v: any) => setSettings(prev => ({...prev, [k]: v}));
+
+  const updateDay = (day: DayKey, patch: Partial<DayHours>) => setSettings(prev => ({
+    ...prev,
+    businessHours: {
+      ...DEFAULT_HOURS,
+      ...prev.businessHours,
+      [day]: { ...DEFAULT_HOURS[day], ...prev.businessHours?.[day], ...patch },
+    },
+  }));
 
   if (loading) return <div className="flex justify-center py-20"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
 
@@ -107,11 +132,30 @@ export default function AdminSettings() {
       {/* Hours */}
       <div className="card bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="font-serif text-xl font-bold mb-4">Business Hours</h2>
-          <div className="space-y-3">
-            <div className="form-control"><label className="label"><span className="label-text">Mon–Fri</span></label><input className="input input-bordered" value={settings.hoursWeekday||''} onChange={e => f('hoursWeekday',e.target.value)} placeholder="7:00 AM – 7:00 PM" /></div>
-            <div className="form-control"><label className="label"><span className="label-text">Saturday</span></label><input className="input input-bordered" value={settings.hoursSaturday||''} onChange={e => f('hoursSaturday',e.target.value)} placeholder="7:00 AM – 7:00 PM" /></div>
-            <div className="form-control"><label className="label"><span className="label-text">Sunday</span></label><input className="input input-bordered" value={settings.hoursSunday||''} onChange={e => f('hoursSunday',e.target.value)} placeholder="8:00 AM – 3:00 PM" /></div>
+          <h2 className="font-serif text-xl font-bold mb-1">Business Hours</h2>
+          <p className="text-sm text-base-content/60 mb-4">Set which days you're open and your hours for each — this is what shows in the site footer. Uncheck a day to mark it closed.</p>
+          <div className="space-y-2">
+            {DAY_ORDER.map(day => {
+              const hours = settings.businessHours?.[day] ?? DEFAULT_HOURS[day];
+              return (
+                <div key={day} className="flex flex-wrap items-center gap-3 py-2 border-b border-base-200 last:border-0">
+                  <span className="w-28 font-medium text-sm">{DAY_LABELS[day]}</span>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="checkbox checkbox-sm" checked={!hours.closed} onChange={e => updateDay(day, { closed: !e.target.checked })} />
+                    <span className="text-sm text-base-content/70">Open</span>
+                  </label>
+                  {hours.closed ? (
+                    <span className="text-sm text-base-content/40 italic">Closed</span>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <input type="time" className="input input-bordered input-sm" value={hours.open} onChange={e => updateDay(day, { open: e.target.value })} />
+                      <span className="text-base-content/50 text-sm">to</span>
+                      <input type="time" className="input input-bordered input-sm" value={hours.close} onChange={e => updateDay(day, { close: e.target.value })} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

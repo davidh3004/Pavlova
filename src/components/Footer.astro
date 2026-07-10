@@ -1,5 +1,6 @@
 ---
 import { useTranslations, type Lang } from '@/i18n/utils';
+import { getSettings, formatBusinessHours } from '@/server/settings';
 
 interface Props {
   lang: Lang;
@@ -8,6 +9,9 @@ interface Props {
 const { lang } = Astro.props;
 const { t } = useTranslations(lang);
 const es = lang === 'es';
+
+const settings = await getSettings();
+const hoursLines = formatBusinessHours(settings.businessHours, lang);
 
 const quickLinks = [
   { href: '/daily-menu', label: es ? 'Menú' : 'Menu' },
@@ -78,9 +82,7 @@ const quickLinks = [
       <div class="lg:col-span-2">
         <h3 class="eyebrow text-neutral-content/45 mb-5">{t('footer.hours')}</h3>
         <ul class="space-y-2.5 text-sm text-neutral-content/65">
-          <li>{t('contact.hoursDetail.weekday')}</li>
-          <li>{t('contact.hoursDetail.saturday')}</li>
-          <li>{t('contact.hoursDetail.sunday')}</li>
+          {hoursLines.map((line) => <li>{line}</li>)}
         </ul>
       </div>
 
